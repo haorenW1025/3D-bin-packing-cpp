@@ -24,6 +24,7 @@ public:
     /* utility method */
     bool init_moving(int, int);
     void moving(int, int, int);
+    float calculate_volume(int);
     void write_result(std::fstream&);
     void print_result();
 
