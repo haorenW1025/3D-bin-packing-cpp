@@ -35,7 +35,7 @@ void Mgr::moving(int index, int balls_count, int axis) {
                     float c=pow(balls[i].get_x(), 2)+pow(distance_y, 2)+pow(distance_z, 2)-pow(distance, 2);
                     if (pow(b, 2)-4*a*c>=0) {
                         float x= (-b+sqrt(pow(b, 2)-4*a*c))/(2*a);
-                        if (x>max_x && x<cur_x) {
+                        if (x>max_x && x<=cur_x) {
                             balls[index].set_x(x);
                             max_x=x;
                         }
@@ -56,7 +56,7 @@ void Mgr::moving(int index, int balls_count, int axis) {
                     float c=pow(balls[i].get_y(), 2)+pow(distance_x, 2)+pow(distance_z, 2)-pow(distance, 2);
                     if (pow(b, 2)-4*a*c>=0) {
                         float y= (-b+sqrt(pow(b, 2)-4*a*c))/(2*a);
-                        if (y>max_y && y<cur_y) {
+                        if (y>max_y && y<=cur_y) {
                             balls[index].set_y(y);
                             max_y=y;
                         }
@@ -77,7 +77,7 @@ void Mgr::moving(int index, int balls_count, int axis) {
                     float c=pow(balls[i].get_z(), 2)+pow(distance_x, 2)+pow(distance_y, 2)-pow(distance, 2);
                     if (pow(b, 2)-4*a*c>=0) {
                         float z= (-b+sqrt(pow(b, 2)-4*a*c))/(2*a);
-                        if (z>max_z && z<cur_z) {
+                        if (z>max_z && z<=cur_z) {
                             balls[index].set_z(z);
                             max_z=z;
                         }
