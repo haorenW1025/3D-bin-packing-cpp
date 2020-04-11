@@ -144,6 +144,9 @@ void Mgr::moving_algorithm(){
         	pre_x=0.0;
             pre_y=0.0;
             pre_z=0.0;
+            balls[count].set_x(init_x);
+            balls[count].set_y(init_y);
+            balls[count].set_z(init_z);
             cur_x=init_x;
             cur_y=init_y;
             cur_z=init_z;
@@ -167,6 +170,9 @@ void Mgr::moving_algorithm(){
         	pre_x=0.0;
             pre_y=0.0;
             pre_z=0.0;
+            balls[count].set_x(init_x);
+            balls[count].set_y(init_y);
+            balls[count].set_z(init_z);
             cur_x=init_x;
             cur_y=init_y;
             cur_z=init_z;
@@ -190,6 +196,9 @@ void Mgr::moving_algorithm(){
         	pre_x=0.0;
             pre_y=0.0;
             pre_z=0.0;
+            balls[count].set_x(init_x);
+            balls[count].set_y(init_y);
+            balls[count].set_z(init_z);
             cur_x=init_x;
             cur_y=init_y;
             cur_z=init_z;
@@ -213,6 +222,9 @@ void Mgr::moving_algorithm(){
         	pre_x=0.0;
             pre_y=0.0;
             pre_z=0.0;
+            balls[count].set_x(init_x);
+            balls[count].set_y(init_y);
+            balls[count].set_z(init_z);
             cur_x=init_x;
             cur_y=init_y;
             cur_z=init_z;
@@ -236,6 +248,9 @@ void Mgr::moving_algorithm(){
         	pre_x=0.0;
             pre_y=0.0;
             pre_z=0.0;
+            balls[count].set_x(init_x);
+            balls[count].set_y(init_y);
+            balls[count].set_z(init_z);
             cur_x=init_x;
             cur_y=init_y;
             cur_z=init_z;
