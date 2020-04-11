@@ -23,6 +23,7 @@ bool Mgr::init_moving(int index, int balls_count){
 void Mgr::moving(int index, int balls_count, int axis) {
     switch(axis) {
         case 0: {
+        		float cur_x=balls[index].get_x();
                 float max_x=balls[index].get_r();
                 balls[index].set_x(max_x);
                 for(int i=balls_count;i<index;i++) {
@@ -34,7 +35,7 @@ void Mgr::moving(int index, int balls_count, int axis) {
                     float c=pow(balls[i].get_x(), 2)+pow(distance_y, 2)+pow(distance_z, 2)-pow(distance, 2);
                     if (pow(b, 2)-4*a*c>=0) {
                         float x= (-b+sqrt(pow(b, 2)-4*a*c))/(2*a);
-                        if (x>max_x) {
+                        if (x>max_x && x<cur_x) {
                             balls[index].set_x(x);
                             max_x=x;
                         }
@@ -43,6 +44,7 @@ void Mgr::moving(int index, int balls_count, int axis) {
             }
             break;
         case 1: {
+        		float cur_y=balls[index].get_y();
                 float max_y=balls[index].get_r();
                 balls[index].set_y(max_y);
                 for(int i=balls_count;i<index;i++) {
@@ -54,7 +56,7 @@ void Mgr::moving(int index, int balls_count, int axis) {
                     float c=pow(balls[i].get_y(), 2)+pow(distance_x, 2)+pow(distance_z, 2)-pow(distance, 2);
                     if (pow(b, 2)-4*a*c>=0) {
                         float y= (-b+sqrt(pow(b, 2)-4*a*c))/(2*a);
-                        if (y>max_y) {
+                        if (y>max_y && y<cur_y) {
                             balls[index].set_y(y);
                             max_y=y;
                         }
@@ -63,6 +65,7 @@ void Mgr::moving(int index, int balls_count, int axis) {
             }
             break;
         case 2: {
+        		float cur_z=balls[index].get_z();
                 float max_z=balls[index].get_r();
                 balls[index].set_z(max_z);
                 for(int i=balls_count;i<index;i++) {
@@ -74,7 +77,7 @@ void Mgr::moving(int index, int balls_count, int axis) {
                     float c=pow(balls[i].get_z(), 2)+pow(distance_x, 2)+pow(distance_y, 2)-pow(distance, 2);
                     if (pow(b, 2)-4*a*c>=0) {
                         float z= (-b+sqrt(pow(b, 2)-4*a*c))/(2*a);
-                        if (z>max_z) {
+                        if (z>max_z && z<cur_z) {
                             balls[index].set_z(z);
                             max_z=z;
                         }
