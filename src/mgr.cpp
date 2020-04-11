@@ -124,91 +124,13 @@ void Mgr::moving_algorithm(){
             float cur_x=balls[count].get_x();
             float cur_y=balls[count].get_y();
             float cur_z=balls[count].get_z();
-        	while (pre_x!=cur_x && pre_y!=cur_y && pre_z!=cur_z) {//move in xyz directions until position remain unchanged
+        	while (pre_x!=cur_x && pre_y!=cur_y && pre_z!=cur_z) {//move in zyx directions until position remain unchanged
                 pre_x=balls[count].get_x();
                 pre_y=balls[count].get_y();
                 pre_z=balls[count].get_z();
-                moving(count, balls_count, 0);//xyz
-                moving(count, balls_count, 1);//xyz
-                moving(count, balls_count, 2);//xyz
-                cur_x=balls[count].get_x();
-                cur_y=balls[count].get_y();
-                cur_z=balls[count].get_z();
-        	}
-        	if (calculate_volume(count) < minimum_volume) {
-        		best_x=balls[count].get_x();
-            	best_y=balls[count].get_y();
-            	best_z=balls[count].get_z();
-            	minimum_volume=calculate_volume(count);
-			}
-        	pre_x=0.0;
-            pre_y=0.0;
-            pre_z=0.0;
-            balls[count].set_x(init_x);
-            balls[count].set_y(init_y);
-            balls[count].set_z(init_z);
-            cur_x=init_x;
-            cur_y=init_y;
-            cur_z=init_z;
-        	while (pre_x!=cur_x && pre_y!=cur_y && pre_z!=cur_z) {//move in xzy directions until position remain unchanged
-                pre_x=balls[count].get_x();
-                pre_y=balls[count].get_y();
-                pre_z=balls[count].get_z();
-                moving(count, balls_count, 0);//xzy
-                moving(count, balls_count, 2);//xzy
-                moving(count, balls_count, 1);//xzy
-                cur_x=balls[count].get_x();
-                cur_y=balls[count].get_y();
-                cur_z=balls[count].get_z();
-        	}
-        	if (calculate_volume(count) < minimum_volume) {
-        		best_x=balls[count].get_x();
-            	best_y=balls[count].get_y();
-            	best_z=balls[count].get_z();
-            	minimum_volume=calculate_volume(count);
-			}
-        	pre_x=0.0;
-            pre_y=0.0;
-            pre_z=0.0;
-            balls[count].set_x(init_x);
-            balls[count].set_y(init_y);
-            balls[count].set_z(init_z);
-            cur_x=init_x;
-            cur_y=init_y;
-            cur_z=init_z;
-        	while (pre_x!=cur_x && pre_y!=cur_y && pre_z!=cur_z) {//move in yxz directions until position remain unchanged
-                pre_x=balls[count].get_x();
-                pre_y=balls[count].get_y();
-                pre_z=balls[count].get_z();
-                moving(count, balls_count, 1);//yxz
-                moving(count, balls_count, 0);//yxz
-                moving(count, balls_count, 2);//yxz
-                cur_x=balls[count].get_x();
-                cur_y=balls[count].get_y();
-                cur_z=balls[count].get_z();
-        	}
-        	if (calculate_volume(count) < minimum_volume) {
-        		best_x=balls[count].get_x();
-            	best_y=balls[count].get_y();
-            	best_z=balls[count].get_z();
-            	minimum_volume=calculate_volume(count);
-			}
-        	pre_x=0.0;
-            pre_y=0.0;
-            pre_z=0.0;
-            balls[count].set_x(init_x);
-            balls[count].set_y(init_y);
-            balls[count].set_z(init_z);
-            cur_x=init_x;
-            cur_y=init_y;
-            cur_z=init_z;
-        	while (pre_x!=cur_x && pre_y!=cur_y && pre_z!=cur_z) {//move in yzx directions until position remain unchanged
-                pre_x=balls[count].get_x();
-                pre_y=balls[count].get_y();
-                pre_z=balls[count].get_z();
-                moving(count, balls_count, 1);//yzx
-                moving(count, balls_count, 2);//yzx
-                moving(count, balls_count, 0);//yzx
+                moving(count, balls_count, 2);//zyx
+                moving(count, balls_count, 1);//zyx
+                moving(count, balls_count, 0);//zyx
                 cur_x=balls[count].get_x();
                 cur_y=balls[count].get_y();
                 cur_z=balls[count].get_z();
@@ -254,13 +176,91 @@ void Mgr::moving_algorithm(){
             cur_x=init_x;
             cur_y=init_y;
             cur_z=init_z;
-        	while (pre_x!=cur_x && pre_y!=cur_y && pre_z!=cur_z) {//move in zyx directions until position remain unchanged
+        	while (pre_x!=cur_x && pre_y!=cur_y && pre_z!=cur_z) {//move in yzx directions until position remain unchanged
                 pre_x=balls[count].get_x();
                 pre_y=balls[count].get_y();
                 pre_z=balls[count].get_z();
-                moving(count, balls_count, 2);//zyx
-                moving(count, balls_count, 0);//zyx
-                moving(count, balls_count, 1);//zyx
+                moving(count, balls_count, 1);//yzx
+                moving(count, balls_count, 2);//yzx
+                moving(count, balls_count, 0);//yzx
+                cur_x=balls[count].get_x();
+                cur_y=balls[count].get_y();
+                cur_z=balls[count].get_z();
+        	}
+        	if (calculate_volume(count) < minimum_volume) {
+        		best_x=balls[count].get_x();
+            	best_y=balls[count].get_y();
+            	best_z=balls[count].get_z();
+            	minimum_volume=calculate_volume(count);
+			}
+        	pre_x=0.0;
+            pre_y=0.0;
+            pre_z=0.0;
+            balls[count].set_x(init_x);
+            balls[count].set_y(init_y);
+            balls[count].set_z(init_z);
+            cur_x=init_x;
+            cur_y=init_y;
+            cur_z=init_z;
+        	while (pre_x!=cur_x && pre_y!=cur_y && pre_z!=cur_z) {//move in yxz directions until position remain unchanged
+                pre_x=balls[count].get_x();
+                pre_y=balls[count].get_y();
+                pre_z=balls[count].get_z();
+                moving(count, balls_count, 1);//yxz
+                moving(count, balls_count, 0);//yxz
+                moving(count, balls_count, 2);//yxz
+                cur_x=balls[count].get_x();
+                cur_y=balls[count].get_y();
+                cur_z=balls[count].get_z();
+        	}
+        	if (calculate_volume(count) < minimum_volume) {
+        		best_x=balls[count].get_x();
+            	best_y=balls[count].get_y();
+            	best_z=balls[count].get_z();
+            	minimum_volume=calculate_volume(count);
+			}
+        	pre_x=0.0;
+            pre_y=0.0;
+            pre_z=0.0;
+            balls[count].set_x(init_x);
+            balls[count].set_y(init_y);
+            balls[count].set_z(init_z);
+            cur_x=init_x;
+            cur_y=init_y;
+            cur_z=init_z;
+        	while (pre_x!=cur_x && pre_y!=cur_y && pre_z!=cur_z) {//move in xzy directions until position remain unchanged
+                pre_x=balls[count].get_x();
+                pre_y=balls[count].get_y();
+                pre_z=balls[count].get_z();
+                moving(count, balls_count, 0);//xzy
+                moving(count, balls_count, 2);//xzy
+                moving(count, balls_count, 1);//xzy
+                cur_x=balls[count].get_x();
+                cur_y=balls[count].get_y();
+                cur_z=balls[count].get_z();
+        	}
+        	if (calculate_volume(count) < minimum_volume) {
+        		best_x=balls[count].get_x();
+            	best_y=balls[count].get_y();
+            	best_z=balls[count].get_z();
+            	minimum_volume=calculate_volume(count);
+			}
+        	pre_x=0.0;
+            pre_y=0.0;
+            pre_z=0.0;
+            balls[count].set_x(init_x);
+            balls[count].set_y(init_y);
+            balls[count].set_z(init_z);
+            cur_x=init_x;
+            cur_y=init_y;
+            cur_z=init_z;
+        	while (pre_x!=cur_x && pre_y!=cur_y && pre_z!=cur_z) {//move in xyz directions until position remain unchanged
+                pre_x=balls[count].get_x();
+                pre_y=balls[count].get_y();
+                pre_z=balls[count].get_z();
+                moving(count, balls_count, 0);//xyz
+                moving(count, balls_count, 1);//xyz
+                moving(count, balls_count, 2);//xyz
                 cur_x=balls[count].get_x();
                 cur_y=balls[count].get_y();
                 cur_z=balls[count].get_z();
