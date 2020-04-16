@@ -27,7 +27,7 @@ if __name__ == "__main__":
     black = (0, 0, 0)
     white = (1., 1., 1.)
     mlab.figure(fgcolor=(0., 0., 0.), bgcolor=(1., 1., 1.))
-    f = open('output/output_1.txt', 'r')
+    f = open('output/output_2.txt', 'r')
     length = int(f.readline())
     number = int(f.readline())
     for i in range(number):

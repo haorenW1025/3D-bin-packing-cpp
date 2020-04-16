@@ -9,10 +9,10 @@ bool Mgr::init_moving(int index, int balls_count){
     balls[index].set_y(box_dim-balls[index].get_r());
     balls[index].set_z(box_dim-balls[index].get_r());
     for(int i = balls_count; i < index; i++) {
-        float distance=balls[i].get_r()+balls[index].get_r();
-        float distance_x=balls[index].get_x()-balls[i].get_x();
-        float distance_y=balls[index].get_y()-balls[i].get_y();
-        float distance_z=balls[index].get_z()-balls[i].get_z();
+        double distance=balls[i].get_r()+balls[index].get_r();
+        double distance_x=balls[index].get_x()-balls[i].get_x();
+        double distance_y=balls[index].get_y()-balls[i].get_y();
+        double distance_z=balls[index].get_z()-balls[i].get_z();
         if (pow(distance_x, 2)+pow(distance_y, 2)+pow(distance_z, 2)<pow(distance, 2)) {
             return false;
         }	
@@ -23,19 +23,19 @@ bool Mgr::init_moving(int index, int balls_count){
 void Mgr::moving(int index, int balls_count, int axis) {
     switch(axis) {
         case 0: {
-        		float cur_x=balls[index].get_x();
-                float max_x=balls[index].get_r();
+                double cur_x=balls[index].get_x();
+                double max_x=balls[index].get_r();
                 balls[index].set_x(max_x);
                 for(int i=balls_count;i<index;i++) {
-                    float distance=balls[i].get_r()+balls[index].get_r();
-                    float distance_y=balls[index].get_y()-balls[i].get_y();
-                    float distance_z=balls[index].get_z()-balls[i].get_z();
-                    float a=1.0;
-                    float b=-2.0*balls[i].get_x();
-                    float c=pow(balls[i].get_x(), 2)+pow(distance_y, 2)+pow(distance_z, 2)-pow(distance, 2);
-                    if (pow(b, 2)-4*a*c>=0) {
-                        float x= (-b+sqrt(pow(b, 2)-4*a*c))/(2*a);
-                        if (x>max_x && x<=cur_x && x>balls[i].get_x()) {
+                    double distance=balls[i].get_r()+balls[index].get_r();
+                    double distance_y=balls[index].get_y()-balls[i].get_y();
+                    double distance_z=balls[index].get_z()-balls[i].get_z();
+                    double a=1.0;
+                    double b=-2.0*balls[i].get_x();
+                    double c=pow(balls[i].get_x(), 2)+pow(distance_y, 2)+pow(distance_z, 2)-pow(distance, 2);
+                    if (pow(b, 2)-4*a*c>0) {
+                        double x= (-b+sqrt(pow(b, 2)-4*a*c))/(2*a);
+                        if (x>max_x && x<=cur_x+1e-5) {
                             balls[index].set_x(x);
                             max_x=x;
                         }
@@ -44,19 +44,19 @@ void Mgr::moving(int index, int balls_count, int axis) {
             }
             break;
         case 1: {
-        		float cur_y=balls[index].get_y();
-                float max_y=balls[index].get_r();
+        		double cur_y=balls[index].get_y();
+                double max_y=balls[index].get_r();
                 balls[index].set_y(max_y);
                 for(int i=balls_count;i<index;i++) {
-                    float distance=balls[i].get_r()+balls[index].get_r();
-                    float distance_x=balls[index].get_x()-balls[i].get_x();
-                    float distance_z=balls[index].get_z()-balls[i].get_z();
-                    float a=1.0;
-                    float b=-2.0*balls[i].get_y();
-                    float c=pow(balls[i].get_y(), 2)+pow(distance_x, 2)+pow(distance_z, 2)-pow(distance, 2);
-                    if (pow(b, 2)-4*a*c>=0) {
-                        float y= (-b+sqrt(pow(b, 2)-4*a*c))/(2*a);
-                        if (y>max_y && y<=cur_y && y>balls[i].get_y()) {
+                    double distance=balls[i].get_r()+balls[index].get_r();
+                    double distance_x=balls[index].get_x()-balls[i].get_x();
+                    double distance_z=balls[index].get_z()-balls[i].get_z();
+                    double a=1.0;
+                    double b=-2.0*balls[i].get_y();
+                    double c=pow(balls[i].get_y(), 2)+pow(distance_x, 2)+pow(distance_z, 2)-pow(distance, 2);
+                    if (pow(b, 2)-4*a*c>0) {
+                        double y= (-b+sqrt(pow(b, 2)-4*a*c))/(2*a);
+                        if (y>max_y && y<=cur_y+1e-5) {
                             balls[index].set_y(y);
                             max_y=y;
                         }
@@ -65,19 +65,19 @@ void Mgr::moving(int index, int balls_count, int axis) {
             }
             break;
         case 2: {
-        		float cur_z=balls[index].get_z();
-                float max_z=balls[index].get_r();
+        		double cur_z=balls[index].get_z();
+                double max_z=balls[index].get_r();
                 balls[index].set_z(max_z);
                 for(int i=balls_count;i<index;i++) {
-                    float distance=balls[i].get_r()+balls[index].get_r();
-                    float distance_x=balls[index].get_x()-balls[i].get_x();
-                    float distance_y=balls[index].get_y()-balls[i].get_y();
-                    float a=1.0;
-                    float b=-2.0*balls[i].get_z();
-                    float c=pow(balls[i].get_z(), 2)+pow(distance_x, 2)+pow(distance_y, 2)-pow(distance, 2);
-                    if (pow(b, 2)-4*a*c>=0) {
-                        float z= (-b+sqrt(pow(b, 2)-4*a*c))/(2*a);
-                        if (z>max_z && z<=cur_z && z>balls[i].get_z()) {
+                    double distance=balls[i].get_r()+balls[index].get_r();
+                    double distance_x=balls[index].get_x()-balls[i].get_x();
+                    double distance_y=balls[index].get_y()-balls[i].get_y();
+                    double a=1.0;
+                    double b=-2.0*balls[i].get_z();
+                    double c=pow(balls[i].get_z(), 2)+pow(distance_x, 2)+pow(distance_y, 2)-pow(distance, 2);
+                    if (pow(b, 2)-4*a*c>0) {
+                        double z= (-b+sqrt(pow(b, 2)-4*a*c))/(2*a);
+                        if (z>max_z && z<=cur_z+1e-5) {
                             balls[index].set_z(z);
                             max_z=z;
                         }
@@ -88,10 +88,10 @@ void Mgr::moving(int index, int balls_count, int axis) {
     }
 }
 
-float Mgr::calculate_volume(int index){
-	float max_x=0;
-	float max_y=0;
-	float max_z=0;
+double Mgr::calculate_volume(int index){
+	double max_x=0;
+	double max_y=0;
+	double max_z=0;
 	for(int i=balls_count;i<index+1;i++) {
 		if (balls[i].get_x()+balls[i].get_r()>max_x) {
 			max_x=balls[i].get_x()+balls[i].get_r();
@@ -111,19 +111,19 @@ void Mgr::moving_algorithm(){
     while (count < get_number()) {
         cout << count << endl;
         if (init_moving(count, balls_count)) {
-        	float minimum_volume=pow(box_dim, 3);
-        	float best_x=balls[count].get_x();
-            float best_y=balls[count].get_y();
-            float best_z=balls[count].get_z();
-            float init_x=balls[count].get_x();
-            float init_y=balls[count].get_y();
-            float init_z=balls[count].get_z();
-            float pre_x=0.0;
-            float pre_y=0.0;
-            float pre_z=0.0;
-            float cur_x=balls[count].get_x();
-            float cur_y=balls[count].get_y();
-            float cur_z=balls[count].get_z();
+        	double minimum_volume=pow(box_dim, 3);
+        	double best_x=balls[count].get_x();
+            double best_y=balls[count].get_y();
+            double best_z=balls[count].get_z();
+            double init_x=balls[count].get_x();
+            double init_y=balls[count].get_y();
+            double init_z=balls[count].get_z();
+            double pre_x=0.0;
+            double pre_y=0.0;
+            double pre_z=0.0;
+            double cur_x=balls[count].get_x();
+            double cur_y=balls[count].get_y();
+            double cur_z=balls[count].get_z();
         	while (pre_x!=cur_x && pre_y!=cur_y && pre_z!=cur_z) {//move in zyx directions until position remain unchanged
                 pre_x=balls[count].get_x();
                 pre_y=balls[count].get_y();
