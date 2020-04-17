@@ -6,6 +6,7 @@ class Sphere
 public:
     Sphere(double r):radius(r){}
     ~Sphere(){};
+    Sphere(const Sphere& s):radius(s.radius){}
     float get_r() {return radius; }
     float get_x() {return x; }
     float get_y() {return y; }

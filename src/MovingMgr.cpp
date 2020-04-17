@@ -1,10 +1,10 @@
 #include <iostream>
 #include <cmath>
-#include "mgr.h"
+#include "MovingMgr.h"
 
 using namespace std;
 
-bool Mgr::init_moving(int index, int balls_count){
+bool MovingMgr::init_moving(int index, int balls_count){
     balls[index].set_x(box_dim-balls[index].get_r());
     balls[index].set_y(box_dim-balls[index].get_r());
     balls[index].set_z(box_dim-balls[index].get_r());
@@ -15,12 +15,12 @@ bool Mgr::init_moving(int index, int balls_count){
         double distance_z=balls[index].get_z()-balls[i].get_z();
         if (pow(distance_x, 2)+pow(distance_y, 2)+pow(distance_z, 2)<pow(distance, 2)) {
             return false;
-        }	
+        }
     }
     return true;
 }
 
-void Mgr::moving(int index, int balls_count, int axis) {
+void MovingMgr::moving(int index, int balls_count, int axis) {
     switch(axis) {
         case 0: {
                 double cur_x=balls[index].get_x();
@@ -88,7 +88,7 @@ void Mgr::moving(int index, int balls_count, int axis) {
     }
 }
 
-double Mgr::calculate_volume(int index){
+double MovingMgr::calculate_volume(int index){
 	double max_x=0;
 	double max_y=0;
 	double max_z=0;
@@ -106,10 +106,9 @@ double Mgr::calculate_volume(int index){
 	return max_x*max_y*max_z;
 }
 /* Main Moving function */
-void Mgr::moving_algorithm(){
+void MovingMgr::moving_algorithm(){
     int count = 0;
     while (count < get_number()) {
-        cout << count << endl;
         if (init_moving(count, balls_count)) {
         	double minimum_volume=pow(box_dim, 3);
         	double best_x=balls[count].get_x();
@@ -278,17 +277,29 @@ void Mgr::moving_algorithm(){
             indexToBox.push_back(box_count);
             count++;
         } else {
-            cout << "box" << box_count << ": " << endl;//print if box is full
-            for(int i=balls_count;i<count;i++) {
-                cout << "(" << balls[i].get_x() << ", " << balls[i].get_y() << ", " << balls[i].get_z() << ") " << balls[i].get_r() << endl;	
-            }
             box_count++;
             balls_count=count;//if the box is full then the previous balls should not take into concern in the next box
         }
     }
 }
 
-void Mgr::write_result(fstream& output) {
+double MovingMgr::get_cost() {
+    return box_count-1 + (calculate_volume(get_number()-1) / pow(box_dim, 3));
+}
+
+void MovingMgr::reset() {
+    box_count = 1;
+    balls_count = 0;
+    indexToBox.clear();
+}
+
+void MovingMgr::swap(int first_index, int second_index) {
+    Sphere temp = Sphere(balls[first_index].get_r());
+    balls[first_index] = balls[second_index];
+    balls[second_index] = temp;
+}
+
+void MovingMgr::write_result(fstream& output) {
     output << box_dim << endl;
     output << box_count << endl;
     for (int i = 0; i < get_number(); ++i) {
@@ -299,7 +310,7 @@ void Mgr::write_result(fstream& output) {
     output.close();
 }
 
-void Mgr::print_result() {
+void MovingMgr::print_result() {
     cout << "==========================RESULT==========================" << endl;
     cout << "Number of Boxes: " << box_count << endl;
     int index = 0;

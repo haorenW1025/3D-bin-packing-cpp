@@ -1,16 +1,16 @@
-#ifndef MGR_H
-#define MGR_H
+#ifndef MovingMgr_H
+#define MovingMgr_H
 
 #include <math.h>
 #include <vector>
 #include <fstream>
 #include "sphere.h"
 
-class Mgr
+class MovingMgr
 {
 public:
-    Mgr():box_count(1), balls_count(0){};
-    ~Mgr(){};
+    MovingMgr():box_count(1), balls_count(0){};
+    ~MovingMgr(){};
 
     /* access method */
     int get_number() {return balls.size();}
@@ -28,6 +28,11 @@ public:
     void write_result(std::fstream&);
     void print_result();
 
+    /* SA integration*/
+    double get_cost();
+    void reset();
+    void swap(int, int);
+
 private:
     std::vector<Sphere> balls;
     std::vector<int> indexToBox;
@@ -36,4 +41,4 @@ private:
     int balls_count;
 };
 
-#endif /* MGR_H */
+#endif /* MovingMgr_H */

@@ -1,11 +1,12 @@
 #include <iostream>
 #include <fstream>
 #include <cmath>
-#include "mgr.h"
+#include "MovingMgr.h"
+#include "SAMgr.h"
 
 using namespace std;
 
-void parse_input(fstream& input_file, Mgr* mgr) {
+void parse_input(fstream& input_file, MovingMgr* mgr) {
     string line;
     /* get box dimension */
     getline(input_file, line);
@@ -44,16 +45,17 @@ int main(int argc, char** argv)
         cerr << "Usage: ./bin_packing <input file> <output file>" << endl;
         exit(1);
     }
+    /* set random seed */
+    srand( time(NULL) );
 
-	const int num_of_ball=10;
-    Mgr* mgr = new Mgr();
+    MovingMgr* moving_mgr = new MovingMgr();
+    parse_input(input_file, moving_mgr);
 
-    parse_input(input_file, mgr);
+    SAMgr* mgr = new SAMgr(moving_mgr, 1000, 1, 0.98);
+    mgr->start();
 
-    mgr->moving_algorithm();
-    mgr->print_result();
-    mgr->write_result(output_file);
-
-    delete mgr;
+    moving_mgr->write_result(output_file);
+    delete(moving_mgr);
+    delete(mgr);
 	return 0;
 }

@@ -1,7 +1,7 @@
 CC=g++
 LDFLAGS=-std=c++11 -O3 -lm
 EXECUTABLE=bin_packing
-SOURCES=src/mgr.cpp src/main.cpp
+SOURCES=src/MovingMgr.cpp src/SAMgr.cpp src/main.cpp
 OBJECTS=$(SOURCES:.c=.o)
 
 all: $(SOURCES) $(EXECUTABLE)
