@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include <math.h>
 #include <iostream>
+#include <random>
 #include "SAMgr.h"
 
 void SAMgr::start() {
@@ -48,8 +49,12 @@ void SAMgr::start() {
 }
 
 bool SAMgr::perform_uphill(double cost) {
+    std::random_device rd;
+    std::default_random_engine gen = std::default_random_engine(rd());
+    std::uniform_real_distribution<double> dis(0,100);
     double param = exp(-(cost*100)/currentTemperature);
-    double random = rand() % 100;
+    double random = dis(gen);
+    // std::cout << " " << random << std::endl;
     return param * 100 > random;
 }
 
