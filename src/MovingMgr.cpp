@@ -13,7 +13,7 @@ bool MovingMgr::init_moving(int index, int balls_count){
         double distance_x=balls[index].get_x()-balls[i].get_x();
         double distance_y=balls[index].get_y()-balls[i].get_y();
         double distance_z=balls[index].get_z()-balls[i].get_z();
-        if (pow(distance_x, 2)+pow(distance_y, 2)+pow(distance_z, 2)<pow(distance, 2)) {
+        if (pow(distance_x, 2)+pow(distance_y, 2)+pow(distance_z, 2)+eps<pow(distance, 2)) {
             return false;
         }
     }
@@ -35,7 +35,7 @@ void MovingMgr::moving(int index, int balls_count, int axis) {
                     double c=pow(balls[i].get_x(), 2)+pow(distance_y, 2)+pow(distance_z, 2)-pow(distance, 2);
                     if (pow(b, 2)-4*a*c>0) {
                         double x= (-b+sqrt(pow(b, 2)-4*a*c))/(2*a);
-                        if (x>max_x && x<=cur_x+1e-3) {
+                        if (x>max_x && x<=cur_x+eps) {
                             balls[index].set_x(x);
                             max_x=x;
                         }
@@ -56,7 +56,7 @@ void MovingMgr::moving(int index, int balls_count, int axis) {
                     double c=pow(balls[i].get_y(), 2)+pow(distance_x, 2)+pow(distance_z, 2)-pow(distance, 2);
                     if (pow(b, 2)-4*a*c>0) {
                         double y= (-b+sqrt(pow(b, 2)-4*a*c))/(2*a);
-                        if (y>max_y && y<=cur_y+1e-3) {
+                        if (y>max_y && y<=cur_y+eps) {
                             balls[index].set_y(y);
                             max_y=y;
                         }
@@ -77,7 +77,7 @@ void MovingMgr::moving(int index, int balls_count, int axis) {
                     double c=pow(balls[i].get_z(), 2)+pow(distance_x, 2)+pow(distance_y, 2)-pow(distance, 2);
                     if (pow(b, 2)-4*a*c>0) {
                         double z= (-b+sqrt(pow(b, 2)-4*a*c))/(2*a);
-                        if (z>max_z && z<=cur_z+1e-3) {
+                        if (z>max_z && z<=cur_z+eps) {
                             balls[index].set_z(z);
                             max_z=z;
                         }
@@ -123,7 +123,7 @@ void MovingMgr::moving_algorithm(){
             double cur_x=balls[count].get_x();
             double cur_y=balls[count].get_y();
             double cur_z=balls[count].get_z();
-        	while (abs(pre_x-cur_x)>1e-3 && abs(pre_y-cur_y)>1e-3 && abs(pre_z-cur_z)>1e-3) {//move in zyx directions until position remain unchanged
+        	while (abs(pre_x-cur_x)>eps && abs(pre_y-cur_y)>eps && abs(pre_z-cur_z)>eps) {//move in zyx directions until position remain unchanged
                 pre_x=balls[count].get_x();
                 pre_y=balls[count].get_y();
                 pre_z=balls[count].get_z();
@@ -149,7 +149,7 @@ void MovingMgr::moving_algorithm(){
             cur_x=init_x;
             cur_y=init_y;
             cur_z=init_z;
-        	while (abs(pre_x-cur_x)>1e-3 && abs(pre_y-cur_y)>1e-3 && abs(pre_z-cur_z)>1e-3) {//move in zxy directions until position remain unchanged
+        	while (abs(pre_x-cur_x)>eps && abs(pre_y-cur_y)>eps && abs(pre_z-cur_z)>eps) {//move in zxy directions until position remain unchanged
                 pre_x=balls[count].get_x();
                 pre_y=balls[count].get_y();
                 pre_z=balls[count].get_z();
@@ -175,7 +175,7 @@ void MovingMgr::moving_algorithm(){
             cur_x=init_x;
             cur_y=init_y;
             cur_z=init_z;
-        	while (abs(pre_x-cur_x)>1e-3 && abs(pre_y-cur_y)>1e-3 && abs(pre_z-cur_z)>1e-3) {//move in yzx directions until position remain unchanged
+        	while (abs(pre_x-cur_x)>eps && abs(pre_y-cur_y)>eps && abs(pre_z-cur_z)>eps) {//move in yzx directions until position remain unchanged
                 pre_x=balls[count].get_x();
                 pre_y=balls[count].get_y();
                 pre_z=balls[count].get_z();
@@ -201,7 +201,7 @@ void MovingMgr::moving_algorithm(){
             cur_x=init_x;
             cur_y=init_y;
             cur_z=init_z;
-        	while (abs(pre_x-cur_x)>1e-3 && abs(pre_y-cur_y)>1e-3 && abs(pre_z-cur_z)>1e-3) {//move in yxz directions until position remain unchanged
+        	while (abs(pre_x-cur_x)>eps && abs(pre_y-cur_y)>eps && abs(pre_z-cur_z)>eps) {//move in yxz directions until position remain unchanged
                 pre_x=balls[count].get_x();
                 pre_y=balls[count].get_y();
                 pre_z=balls[count].get_z();
@@ -227,7 +227,7 @@ void MovingMgr::moving_algorithm(){
             cur_x=init_x;
             cur_y=init_y;
             cur_z=init_z;
-        	while (abs(pre_x-cur_x)>1e-3 && abs(pre_y-cur_y)>1e-3 && abs(pre_z-cur_z)>1e-3) {//move in xzy directions until position remain unchanged
+        	while (abs(pre_x-cur_x)>eps && abs(pre_y-cur_y)>eps && abs(pre_z-cur_z)>eps) {//move in xzy directions until position remain unchanged
                 pre_x=balls[count].get_x();
                 pre_y=balls[count].get_y();
                 pre_z=balls[count].get_z();
@@ -253,7 +253,7 @@ void MovingMgr::moving_algorithm(){
             cur_x=init_x;
             cur_y=init_y;
             cur_z=init_z;
-        	while (abs(pre_x-cur_x)>1e-3 && abs(pre_y-cur_y)>1e-3 && abs(pre_z-cur_z)>1e-3) {//move in xyz directions until position remain unchanged
+        	while (abs(pre_x-cur_x)>eps && abs(pre_y-cur_y)>eps && abs(pre_z-cur_z)>eps) {//move in xyz directions until position remain unchanged
                 pre_x=balls[count].get_x();
                 pre_y=balls[count].get_y();
                 pre_z=balls[count].get_z();
@@ -284,7 +284,7 @@ void MovingMgr::moving_algorithm(){
 }
 
 double MovingMgr::get_cost() {
-    return box_count + (calculate_volume(get_number()-1) / pow(box_dim, 3));
+    return box_count-1 + (calculate_volume(get_number()-1) / pow(box_dim, 3));
 }
 
 void MovingMgr::reset() {

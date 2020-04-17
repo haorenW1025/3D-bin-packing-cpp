@@ -39,6 +39,7 @@ private:
     int box_count;
     double box_dim;
     int balls_count;
+    double eps=0.1;
 };
 
 #endif /* MovingMgr_H */

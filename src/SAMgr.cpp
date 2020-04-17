@@ -45,6 +45,10 @@ void SAMgr::start() {
         currentTemperature *= scalingParameter;
         std::cout << "\r" << "iteration: " << iteration << " tempeature: " << currentTemperature << " cost: " << cost << std::endl;
     }
+    mgr->reset();
+    mgr->moving_algorithm();
+    cost = mgr->get_cost();
+    std::cout << cost << std::endl;
     print_result();
 }
 
