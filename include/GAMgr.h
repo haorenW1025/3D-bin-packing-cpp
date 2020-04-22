@@ -2,16 +2,17 @@
 #define GAMGR_H
 
 #include "MovingMgr.h"
+#include <iostream>
 
 class GAMgr
 {
 public:
     GAMgr(MovingMgr* m, int p, int n): mgr(m), population(p), balls_number(n){
-        int** order = new int*[p];
+        order = new int*[p];
         for (int i = 0; i < population; ++i) {
             order[i] = new int[balls_number];
         }
-        int* best_order = new int[balls_number];
+        best_order = new int[balls_number];
     };
     virtual ~GAMgr(){
         for (int i = 0; i < population; ++i) {

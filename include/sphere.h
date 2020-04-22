@@ -4,6 +4,7 @@
 class Sphere
 {
 public:
+    Sphere():radius(0){}
     Sphere(double r):radius(r){}
     ~Sphere(){};
     Sphere(const Sphere& s):radius(s.radius){}
