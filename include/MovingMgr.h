@@ -32,6 +32,8 @@ public:
     double get_cost();
     void reset();
     void swap(int, int);
+    void reorder(int*);
+    void reorder_back(int*);
 
 private:
     std::vector<Sphere> balls;

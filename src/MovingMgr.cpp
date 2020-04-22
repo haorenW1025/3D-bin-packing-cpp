@@ -299,6 +299,26 @@ void MovingMgr::swap(int first_index, int second_index) {
     balls[second_index] = temp;
 }
 
+void MovingMgr::reorder(int* order) {
+	Sphere temp[get_number()];
+	for(int i=0;i<get_number();i++) {
+		temp[i] = Sphere(balls[i].get_r());
+	}
+	for(int i=0;i<get_number();i++) {
+		balls[i] = temp[order[i]]; 	
+	}
+}
+
+void MovingMgr::reorder_back(int* order) {
+	Sphere temp[get_number()];
+	for(int i=0;i<get_number();i++) {
+		temp[i] = Sphere(balls[i].get_r());
+	}
+	for(int i=0;i<get_number();i++) {
+		balls[order[i]] = temp[i]; 	
+	}
+}
+
 void MovingMgr::write_result(fstream& output) {
     output << box_dim << endl;
     output << box_count << endl;
