@@ -11,12 +11,14 @@ public:
         for (int i = 0; i < population; ++i) {
             order[i] = new int[balls_number];
         }
+        int* best_order = new int[balls_number];
     };
     virtual ~GAMgr(){
         for (int i = 0; i < population; ++i) {
             delete [] order[i];
         }
         delete [] order;
+        delete [] best_order;
     };
     void random_initiailize();
     void selection();
@@ -28,6 +30,8 @@ private:
     int population;
     int balls_number;
     int** order;
+    double best_cost=99999999;
+    int* best_order;
 };
 
 #endif /* GAMGR_H */
