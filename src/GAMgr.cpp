@@ -32,6 +32,7 @@ void GAMgr::selection(){
 		cost[i]=mgr->get_cost();
 		mgr->reorder_back(order[i]);
 	}
+	cur_cost=999999;
 	for(int i=0;i<population;i++) {//best result
 		if(cost[i]<best_cost) {
 			best_cost=cost[i];
@@ -39,9 +40,12 @@ void GAMgr::selection(){
 				best_order[j]=order[i][j];
 			}
 		}
+		if(cost[i]<cur_cost) {
+			cur_cost=cost[i];
+		}
 	}
 	for(int i=0;i<population/2;i++) {
-		if(cost[2*i] > cost[2*i+1]) {
+		if(cost[2*i] < cost[2*i+1]) {
 			for(int j=0;j<balls_number;j++) {
 				temp[i][j]=order[2*i][j];
 			}
@@ -59,7 +63,7 @@ void GAMgr::selection(){
 	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 	shuffle (foo.begin(), foo.end(), std::default_random_engine(seed));
 	for(int i=0;i<population/2;i++) {
-		if(cost[foo[2*i]] > cost[foo[2*i+1]]) {
+		if(cost[foo[2*i]] < cost[foo[2*i+1]]) {
 			for(int j=0;j<balls_number;j++) {
 				temp[i+population/2][j]=order[foo[2*i]][j];
 			}
@@ -75,7 +79,6 @@ void GAMgr::selection(){
 			order[i][j]=temp[i][j];
 		}
 	}
-
 }
 
 void normalization() {
@@ -101,29 +104,41 @@ void GAMgr::crossover(){
             possibility[i][j] /= population;
         }
     }
+//    for (int i = 0; i < balls_number; ++i) {
+//        for (int j = 0; j < balls_number; ++j) {
+//             std::cout << possibility[i][j];
+//        }
+//        std::cout << std::endl;
+//    }
     // generate
+    bool selected[balls_number];
+    double temp[balls_number][balls_number];
     for (int i = 0; i < population; ++i) {
-        bool selected[balls_number];
         for (int l = 0; l < balls_number; ++l){
-            selected[balls_number] = false;
+            selected[l] = false;
+        }
+        for (int l = 0; l < balls_number; ++l){
+            for(int m=0;m<balls_number;++m){
+            	temp[l][m]=possibility[l][m];
+			}
         }
         for (int j = 0; j < balls_number; ++j) {
-            if (j == balls_number-1) {
-                for (int k = 0; k < balls_number; ++k) {
-                    if (!selected[k]) order[i][j] = k;
-                    break;
-                }
-                continue;
-            }
+//            if (j == balls_number-1) {
+//                for (int k = 0; k < balls_number; ++k) {
+//                    if (!selected[k]) order[i][j] = k;
+//                    break;
+//                }
+//                continue;
+//            }
             std::random_device rd;
             std::default_random_engine gen = std::default_random_engine(rd());
             std::uniform_real_distribution<double> dis(0,1);
             double random = dis(gen);
             double possible = 0;
             for (int k = 0; k < balls_number; ++k) {
-                if (selected[k]) continue;
-                possible += possibility[j][k];
-                if (possible > random) {
+                if (!selected[k]) continue;
+                possible += temp[j][k];
+                if (possible > random-1e-6) {
                     double normalize = 0;
                     selected[k] = true;
                     order[i][j] = k;
@@ -131,31 +146,40 @@ void GAMgr::crossover(){
                     // normalize
                     for (int l = 0; l < balls_number; ++l){
                         if (selected[l] == false)
-                            normalize += possibility[j][k];
+                            normalize += temp[j+1][l];
                     }
                     for (int l = 0; l < balls_number; ++l) {
                         if (selected[l] == false)
-                            possibility[j][k] /= normalize;
+                            temp[j+1][l] /= normalize;
                     }
-                    break;
+//                    for (int l = 0; l < balls_number; ++l) {
+//                    	if (selected[l] == false)
+//                        std::cout << temp[j][l] << std::endl;
+//                    }
+//                    break;
                 }
             }
         }
     }
-    // std::cout << "population" << std::endl;
-    // for (int i = 0; i < population; ++i) {
-        // for (int j = 0; j < balls_number; ++j) {
-            // std::cout << order[i][j];
-        // }
-        // std::cout << std::endl;
-    // }
+//    std::cout << "population" << std::endl;
+//    for (int i = 0; i < population; ++i) {
+//        for (int j = 0; j < balls_number; ++j) {
+//             std::cout << order[i][j];
+//        }
+//        std::cout << std::endl;
+//    }
 }
 
 void GAMgr::start(){
     random_initiailize();
-    for (int i = 0; i < 10000; ++i) {
-        std::cout << i << " " << best_cost << std::endl;
+    for (int i = 0; i < 10; ++i) {
         selection();
         crossover();
+        std::cout << i << ": " << best_cost << " " << cur_cost << std::endl;
+        
     }
+	mgr->reorder(best_order);
+    mgr->reset();
+    mgr->moving_algorithm();
+    mgr->print_result();
 }

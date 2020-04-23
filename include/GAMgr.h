@@ -33,6 +33,7 @@ private:
     int** order;
     double best_cost=99999999;
     int* best_order;
+    double cur_cost;
 };
 
 #endif /* GAMGR_H */
