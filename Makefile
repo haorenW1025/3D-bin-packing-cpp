@@ -7,7 +7,7 @@ OBJECTS=$(SOURCES:.c=.o)
 all: $(SOURCES) $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS)
-	$(CC) -o $@ $(CFLAGS) $(OBJECTS) -I include
+	$(CC) -o $@ $(LDFLAGS) $(CFLAGS) $(OBJECTS) -I include
 
 %.o: %.c
 	$(CC) $(CFLAGS) $< -o $@

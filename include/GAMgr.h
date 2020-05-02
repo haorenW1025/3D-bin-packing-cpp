@@ -26,8 +26,9 @@ public:
     void random_initiailize();
     void selection();
     void mutation();
-    void rtr();
+    void rtr(int **);
     int node_distance(int*, int*);
+    int** node();
     double moving(int*);
     void update_cost();
     // node crossover
@@ -35,7 +36,6 @@ public:
     void start();
 private:
 	MovingMgr* mgr;
-    int window_size;
     int population;
     int balls_number;
     int** order;
