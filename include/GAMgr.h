@@ -29,6 +29,7 @@ public:
     void rtr(int **);
     int node_distance(int*, int*);
     int** node();
+    int** edge();
     double moving(int*);
     void update_cost();
     // node crossover

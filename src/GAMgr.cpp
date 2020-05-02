@@ -134,7 +134,7 @@ int** GAMgr::node() {
 
     for (int i = 0; i < population; ++i) {
         for (int j = 0; j < balls_number; ++j) {
-            new_order[i][j] = order[i][j];
+            new_order[i][j] = -1;
         }
     }
 
@@ -176,7 +176,7 @@ int** GAMgr::node() {
             for (int k = 0; k < balls_number; ++k) {
                 if (!selected[k]) continue;
                 possible += temp[j][k];
-                if (possible > random-1e-6) {
+                if (possible > random-1e-3) {
                     double normalize = 0;
                     selected[k] = true;
                     new_order[i][j] = k;
@@ -190,15 +190,99 @@ int** GAMgr::node() {
                         if (selected[l] == false)
                             temp[j+1][l] /= normalize;
                     }
+                    break;
                 }
             }
+            for (int k=0;k<balls_number;k++) {
+            	if (selected[k]==false) {
+            		selected[k] = true;
+                    new_order[i][j] = k;
+                    break;
+				}
+			}
         }
     }
     return new_order;
 }
 
+int** GAMgr::edge() {
+	double prob[balls_number][balls_number] = {0};
+	for (int i=0;i<population;i++) {
+        for (int j=0;j<balls_number-1;j++) {
+            prob[order[i][j]][order[i][j+1]]++;
+        }
+    }
+    bool selected[balls_number];
+    double temp[balls_number][balls_number];
+    int** new_order;
+    new_order = new int* [population];
+    for (int i=0;i<population;i++) {
+    	new_order[i] = new int[balls_number];
+	}
+	for (int i=0;i<population;i++) {
+		for (int j=0;j<balls_number;j++) {
+			new_order[i][j] = order[i][j];
+		}
+	}
+    for (int i=0;i<population;++i) {
+    	for (int j=0;j<balls_number;j++) {
+            selected[j] = false;
+        }
+        for (int j= 0;j<balls_number;j++ ){
+            for(int k=0;k<balls_number;k++) {
+            	temp[j][k]=prob[j][k];
+			}
+        }
+        
+        for (int j=0;j<balls_number;j++) {
+        	std::random_device rd;
+            std::default_random_engine gen = std::default_random_engine(rd());
+            std::uniform_real_distribution<double> dis(0,1);
+            double random = dis(gen);
+            if (j==0) {
+				int random_num = rand() % (balls_number);
+				new_order[i][j] = random_num;
+				selected[random_num] = true;
+			} else {
+				double probability = 0;
+            	for (int k=0;k<balls_number;k++) {
+            		//normalize
+            		double normalize = 0;
+            		for (int l=0;l<balls_number;l++){
+                        if (selected[l] == false) {
+                        	normalize += temp[order[i][j-1]][l];
+						} else {
+							temp[new_order[i][j-1]][l] = 0;
+						}
+                    }
+                    for (int l=0;l<balls_number;l++) {
+                        if (selected[l] == false)
+                            temp[new_order[i][j-1]][l] /= normalize;
+                    }
+                    
+            		probability += temp[order[i][j-1]][k];
+            		if (probability > random-1e-6) {
+            			selected[k] = true;
+                    	new_order[i][j] = k;
+                    	break;
+					}
+				}
+				for (int k=0;k<balls_number;k++) {
+	            	if (selected[k]==false) {
+	            		selected[k] = true;
+	                    new_order[i][j] = k;
+	                    break;
+					}
+				}
+			}
+		}
+	}
+	return new_order;
+}
+
 void GAMgr::crossover(){
     int** new_order = node();
+//    int** new_order = edge();
 
     rtr(new_order);
 
@@ -246,7 +330,7 @@ void GAMgr::rtr(int** new_order) {
 
 void GAMgr::start(){
     random_initiailize();
-    for (int i = 0; i < 1000; ++i) {
+    for (int i = 0; i < 10; ++i) {
         selection();
         crossover();
         // update_cost();
