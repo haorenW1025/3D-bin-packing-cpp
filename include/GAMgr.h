@@ -27,6 +27,7 @@ public:
     void selection();
     void mutation();
     double moving(int*);
+    void update_cost();
     // node crossover
     void crossover();
     void start();
