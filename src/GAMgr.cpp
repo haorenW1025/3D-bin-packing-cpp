@@ -32,7 +32,7 @@ double GAMgr::moving(int* order) {
     mgr->moving_algorithm();
     double _cost = mgr->get_cost();
     mgr->reorder_back(order);
-    return _cost
+    return _cost;
 }
 
 void GAMgr::selection(){
@@ -112,13 +112,6 @@ void GAMgr::crossover(){
             possibility[i][j] /= population;
         }
     }
-//    for (int i = 0; i < balls_number; ++i) {
-//        for (int j = 0; j < balls_number; ++j) {
-//             std::cout << possibility[i][j];
-//        }
-//        std::cout << std::endl;
-//    }
-    // generate
     bool selected[balls_number];
     double temp[balls_number][balls_number];
     for (int i = 0; i < population; ++i) {
@@ -131,13 +124,6 @@ void GAMgr::crossover(){
 			}
         }
         for (int j = 0; j < balls_number; ++j) {
-//            if (j == balls_number-1) {
-//                for (int k = 0; k < balls_number; ++k) {
-//                    if (!selected[k]) order[i][j] = k;
-//                    break;
-//                }
-//                continue;
-//            }
             std::random_device rd;
             std::default_random_engine gen = std::default_random_engine(rd());
             std::uniform_real_distribution<double> dis(0,1);
@@ -160,23 +146,25 @@ void GAMgr::crossover(){
                         if (selected[l] == false)
                             temp[j+1][l] /= normalize;
                     }
-//                    for (int l = 0; l < balls_number; ++l) {
-//                    	if (selected[l] == false)
-//                        std::cout << temp[j][l] << std::endl;
-//                    }
-//                    break;
                 }
             }
         }
     }
-//    std::cout << "population" << std::endl;
-//    for (int i = 0; i < population; ++i) {
-//        for (int j = 0; j < balls_number; ++j) {
-//             std::cout << order[i][j];
-//        }
-//        std::cout << std::endl;
-//    }
 }
+
+int GAMgr::node_distance(int* order_1, int* order_2) {
+    int distance = 0;
+    for (int i = 0; i < population; ++i) {
+        if (order_1[i] != order_2[i]) {
+            distance++;
+        }
+    }
+    return distance;
+}
+
+void GAMgr::rtr() {
+}
+
 
 void GAMgr::start(){
     random_initiailize();
