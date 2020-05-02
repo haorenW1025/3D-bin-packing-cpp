@@ -13,6 +13,7 @@ public:
             order[i] = new int[balls_number];
         }
         best_order = new int[balls_number];
+        cost = new double[p];
     };
     virtual ~GAMgr(){
         for (int i = 0; i < population; ++i) {
@@ -20,9 +21,12 @@ public:
         }
         delete [] order;
         delete [] best_order;
+        delete [] cost;
     };
     void random_initiailize();
     void selection();
+    void mutation();
+    double moving(int*);
     // node crossover
     void crossover();
     void start();
@@ -33,6 +37,7 @@ private:
     int** order;
     double best_cost=99999999;
     int* best_order;
+    double* cost;
     double cur_cost;
 };
 

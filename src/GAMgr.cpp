@@ -22,15 +22,23 @@ void GAMgr::random_initiailize(){
 	}
 }
 
+void GAMgr::mutation() {
+    // TODO
+}
+
+double GAMgr::moving(int* order) {
+    mgr->reorder(order);
+    mgr->reset();
+    mgr->moving_algorithm();
+    double _cost = mgr->get_cost();
+    mgr->reorder_back(order);
+    return _cost
+}
+
 void GAMgr::selection(){
 	int temp[population][balls_number];
-	double cost[population];
 	for(int i=0;i<population;i++) {
-		mgr->reorder(order[i]);
-		mgr->reset();
-		mgr->moving_algorithm();
-		cost[i]=mgr->get_cost();
-		mgr->reorder_back(order[i]);
+        cost[i] = moving(order[i]);
 	}
 	cur_cost=999999;
 	for(int i=0;i<population;i++) {//best result
