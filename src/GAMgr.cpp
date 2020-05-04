@@ -60,14 +60,16 @@ double GAMgr::moving(int* order) {
     return _cost;
 }
 
-void GAMgr::update_cost() {
+double GAMgr::get_avg_cost(int ** new_order) {
+	double total_cost = 0;
 	for(int i=0;i<population;i++) {
-		mgr->reorder(order[i]);
+		mgr->reorder(new_order[i]);
     	mgr->reset();
     	mgr->moving_algorithm();
-    	cost[i] = mgr->get_cost();
-    	mgr->reorder_back(order[i]);
+    	total_cost += mgr->get_cost();
+    	mgr->reorder_back(new_order[i]);
 	}
+	return total_cost / population;
 }
 void GAMgr::selection(){
 	int temp[population][balls_number];
@@ -295,21 +297,45 @@ int** GAMgr::edge() {
 	return new_order;
 }
 
-void GAMgr::crossover(){
-	int node_or_edge = rand() % 2;
-	int** new_order;
-	if (node_or_edge==0) {
-		new_order = node();
+void GAMgr::crossover(int iteration){
+	std::random_device rd;
+    std::default_random_engine gen = std::default_random_engine(rd());
+    std::uniform_real_distribution<double> dis(0,1);
+    double random = dis(gen);
+	int** node_new_order;
+	int** edge_new_order;
+	node_new_order = node();
+	edge_new_order = edge();
+	double node_cost;
+	double edge_cost;
+//	std::cout <<1.0/iteration<<std::endl;
+	if (random > 1.0/iteration) {//do _best
+		node_cost = get_avg_cost(node_new_order);
+		edge_cost = get_avg_cost(edge_new_order);
+		if(node_cost < edge_cost) {
+			edge_or_node = 0;
+		} else {
+			edge_or_node = 1;
+		}
+	} else {//random
+		edge_or_node = rand() %  2;
+	}
+	
+	if (edge_or_node == 0) {
+		rtr(node_new_order, edge_or_node);
 	} else {
-		new_order = edge();
+		rtr(edge_new_order, edge_or_node);
 	}
 
-    rtr(new_order);
 
     for (int i = 0; i < population; ++i) {
-        delete [] new_order[i];
+        delete [] node_new_order[i];
     }
-    delete [] new_order;
+    for (int i = 0; i < population; ++i) {
+        delete [] edge_new_order[i];
+    }
+	delete [] node_new_order;
+	delete [] edge_new_order;
 }
 
 int GAMgr::node_distance(int* order_1, int* order_2) {
@@ -322,40 +348,83 @@ int GAMgr::node_distance(int* order_1, int* order_2) {
     return distance;
 }
 
-void GAMgr::rtr(int** new_order) {
-    int distance = population;
-    int window_size = 300;
-    for (int i = 0; i < population; ++i) {
-        int count = 0;
-        // std::cout << count << std::endl;
-        int best_index = 0;
-        for (int j = 0; j < window_size; ++j) {
-            int index = rand() % (population-1);
-            int temp = node_distance(new_order[i], order[index]);
-            if (temp < distance) {
-                best_index = index;
-            }
-        }
-
-        double new_cost = moving(new_order[i]);
-
-        if (new_cost < cost[best_index]) {
-            cost[best_index] = new_cost;
-        }
-        for (int j = 0; j < balls_number; ++j) {
-            order[best_index][j] = new_order[i][j];
-        }
-    }
+int GAMgr::edge_distance(int* order_1, int* order_2) {
+	int same = 0;
+	for (int i=0;i<balls_number-1;i++) {
+		for (int j=0;j<balls_number-1;j++) {
+			if (order_1[i] == order_2[j] && order_1[i+1] == order_2[j+1]) {
+				same++;
+				break;
+			}
+		}
+		
+	}
+	return balls_number-1 - same;
+}
+void GAMgr::rtr(int** new_order, int edge_or_node) {
+	if (edge_or_node == 0) {
+	    int distance = population;
+	    int window_size = 300;
+	    for (int i = 0; i < population; ++i) {
+	        int count = 0;
+	        // std::cout << count << std::endl;
+	        int best_index = 0;
+	        for (int j = 0; j < window_size; ++j) {
+	            int index = rand() % (population-1);
+	            int temp = node_distance(new_order[i], order[index]);
+	            if (temp < distance) {
+	                best_index = index;
+	            }
+	        }
+	
+	        double new_cost = moving(new_order[i]);
+	
+	        if (new_cost < cost[best_index]) {
+	            cost[best_index] = new_cost;
+	        }
+	        for (int j = 0; j < balls_number; ++j) {
+	            order[best_index][j] = new_order[i][j];
+	        }
+	    }
+	} else {
+		int distance = population;
+	    int window_size = 300;
+	    for (int i = 0; i < population; ++i) {
+	        int count = 0;
+	        // std::cout << count << std::endl;
+	        int best_index = 0;
+	        for (int j = 0; j < window_size; ++j) {
+	            int index = rand() % (population-1);
+	            int temp = edge_distance(new_order[i], order[index]);
+	            if (temp < distance) {
+	                best_index = index;
+	            }
+	        }
+	
+	        double new_cost = moving(new_order[i]);
+	
+	        if (new_cost < cost[best_index]) {
+	            cost[best_index] = new_cost;
+	        }
+	        for (int j = 0; j < balls_number; ++j) {
+	            order[best_index][j] = new_order[i][j];
+	        }
+	    }
+	}
 }
 
 void GAMgr::start(){
     random_initiailize();
-    for (int i = 0; i < 100; ++i) {
+    for (int i = 0; i < 1000; ++i) {
         selection();
-        crossover();
-        // update_cost();
+        crossover(i+1);
         mutation();
-        std::cout << i << ": " << best_cost << " " << cur_cost << std::endl;
+        if (edge_or_node == 0) {
+        	std::cout << i << ": " << best_cost << " " << cur_cost << " " << "node" << std::endl;
+		} else {
+			std::cout << i << ": " << best_cost << " " << cur_cost << " " << "edge" << std::endl;
+		}
+        
         
     }
 	mgr->reorder(best_order);

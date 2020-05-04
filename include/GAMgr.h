@@ -26,14 +26,15 @@ public:
     void random_initiailize();
     void selection();
     void mutation();
-    void rtr(int **);
+    void rtr(int **, int);
     int node_distance(int*, int*);
+    int edge_distance(int*, int*);
     int** node();
     int** edge();
     double moving(int*);
-    void update_cost();
+    double get_avg_cost(int**);
     // node crossover
-    void crossover();
+    void crossover(int);
     void start();
 private:
 	MovingMgr* mgr;
@@ -44,6 +45,7 @@ private:
     int* best_order;
     double* cost;
     double cur_cost;
+    int edge_or_node;
 };
 
 #endif /* GAMGR_H */
