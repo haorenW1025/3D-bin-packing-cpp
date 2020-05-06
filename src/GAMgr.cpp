@@ -371,55 +371,37 @@ int GAMgr::edge_distance(int* order_1, int* order_2) {
 	return balls_number-1 - same;
 }
 void GAMgr::rtr(int** new_order, int edge_or_node) {
-	if (edge_or_node == 0) {
-	    int distance = population;
-	    int window_size = 300;
-	    for (int i = 0; i < population; ++i) {
-	        int count = 0;
-	        // std::cout << count << std::endl;
-	        int best_index = 0;
-	        for (int j = 0; j < window_size; ++j) {
-	            int index = rand() % (population-1);
-	            int temp = node_distance(new_order[i], order[index]);
-	            if (temp < distance) {
-	                best_index = index;
-	            }
-	        }
-	
-	        double new_cost = moving(new_order[i]);
-	
-	        if (new_cost < cost[best_index]) {
-	            cost[best_index] = new_cost;
-	        }
-	        for (int j = 0; j < balls_number; ++j) {
-	            order[best_index][j] = new_order[i][j];
-	        }
-	    }
-	} else {
-		int distance = population;
-	    int window_size = 300;
-	    for (int i = 0; i < population; ++i) {
-	        int count = 0;
-	        // std::cout << count << std::endl;
-	        int best_index = 0;
-	        for (int j = 0; j < window_size; ++j) {
-	            int index = rand() % (population-1);
-	            int temp = edge_distance(new_order[i], order[index]);
-	            if (temp < distance) {
-	                best_index = index;
-	            }
-	        }
-	
-	        double new_cost = moving(new_order[i]);
-	
-	        if (new_cost < cost[best_index]) {
-	            cost[best_index] = new_cost;
-	        }
-	        for (int j = 0; j < balls_number; ++j) {
-	            order[best_index][j] = new_order[i][j];
-	        }
-	    }
-	}
+    int distance = population;
+    std::vector <int> index;
+    int window_size = 300;
+    for (int i = 0; i < population; ++i) {
+        int count = 0;
+        // std::cout << count << std::endl;
+        int best_index = 0;
+        for (int j = 0; j < window_size; ++j) {
+            int index = rand() % (population-1);
+            int temp;
+            if (edge_or_node == 0) {
+                temp = node_distance(new_order[i], order[index]);
+            } else {
+                temp = edge_distance(new_order[i], order[index]);
+            }
+            if (temp < distance) {
+                best_index = index;
+            }
+        }
+
+        double new_cost = moving(new_order[i]);
+
+        if (new_cost < cost[best_index]) {
+            index.push_back(best_index);
+        }
+    }
+    for (int i = 0, n = index.size(); i < n; ++i) {
+        for (int j = 0; j < balls_number; ++j) {
+            order[index[i]][j] = new_order[index[i]][j];
+        }
+    }
 }
 
 void GAMgr::start(){
