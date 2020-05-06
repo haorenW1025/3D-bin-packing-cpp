@@ -72,7 +72,11 @@ double GAMgr::get_avg_cost(int ** new_order) {
 	return total_cost / population;
 }
 void GAMgr::selection(){
-	int temp[population][balls_number];
+	int **temp;
+    temp = new int*[population];
+    for (int i = 0; i < population; ++i) {
+        temp[i] = new int[balls_number];
+    }
 	cur_cost=999999;
 	for(int i=0;i<population;i++) {//best result
 		if(cost[i]<best_cost) {
@@ -120,6 +124,11 @@ void GAMgr::selection(){
 			order[i][j]=temp[i][j];
 		}
 	}
+	
+	for (int i=0;i<population;i++) {
+		delete [] temp[i];
+	}
+	delete [] temp;
 }
 
 void normalization() {
@@ -415,7 +424,7 @@ void GAMgr::rtr(int** new_order, int edge_or_node) {
 
 void GAMgr::start(){
     random_initiailize();
-    for (int i = 0; i < 1000; ++i) {
+    for (int i = 0; i < 100; ++i) {
         selection();
         crossover(i+1);
         mutation();

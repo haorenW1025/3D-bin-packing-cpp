@@ -53,7 +53,7 @@ int main(int argc, char** argv)
     parse_input(input_file, moving_mgr);
 
     // SAMgr* mgr = new SAMgr(moving_mgr, 1000, 1, 0.98);
-    GAMgr* mgr = new GAMgr(moving_mgr, 1000, moving_mgr->get_number());
+    GAMgr* mgr = new GAMgr(moving_mgr, 100000, moving_mgr->get_number());
     mgr->start();
 
     moving_mgr->write_result(output_file);
