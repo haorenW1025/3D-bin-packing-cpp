@@ -378,20 +378,26 @@ void GAMgr::rtr(int** new_order, int edge_or_node) {
     int distance = population;
     std::vector <int> index;
     int window_size = 300;
+    std::vector<int> random_index;
     for (int i = 0; i < population; ++i) {
+        random_index.push_back(i);
+    }
+    for (int i = 0; i < population; ++i) {
+        unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+        shuffle (random_index.begin(), random_index.end(), std::default_random_engine(seed));
         int count = 0;
         // std::cout << count << std::endl;
         int best_index = 0;
         for (int j = 0; j < window_size; ++j) {
-            int index = rand() % (population-1);
+            int temp_index = random_index[j];
             int temp;
             if (edge_or_node == 0) {
-                temp = node_distance(new_order[i], order[index]);
+                temp = node_distance(new_order[i], order[temp_index]);
             } else {
-                temp = edge_distance(new_order[i], order[index]);
+                temp = edge_distance(new_order[i], order[temp_index]);
             }
             if (temp < distance) {
-                best_index = index;
+                best_index = temp_index;
             }
         }
 
