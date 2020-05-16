@@ -7,7 +7,7 @@
 #include <algorithm> 
 #include <vector>
 #include <chrono>
-#include <assert.h>
+#include <random>
 
 void GAMgr::random_initiailize(){
 	std::vector<int> foo;
@@ -51,7 +51,7 @@ void GAMgr::mutation() {
                 order[i][first_index] = order[i][second_index];
                 order[i][second_index] = temp;
             }
-    }
+    	}
     }
 }
 
@@ -138,85 +138,100 @@ void GAMgr::selection(){
 void normalization() {
 }
 
-int** GAMgr::node() {
-    double possibility[balls_number][balls_number];
-
-    int **new_order;
-    new_order = new int*[population];
-    for (int i = 0; i < population; ++i) {
-        new_order[i] = new int[balls_number];
-    }
-
-    for (int i = 0; i < population; ++i) {
-        for (int j = 0; j < balls_number; ++j) {
-            new_order[i][j] = -1;
-        }
-    }
+double** GAMgr::node_probability() {
+	double** prob;
+	prob = new double*[balls_number];
+	for (int i=0;i<balls_number;i++) {
+		prob[i] = new double[balls_number];
+	}
 
     // initialize
     for (int i = 0; i < balls_number; ++i) {
         for (int j = 0; j < balls_number; ++j) {
-            possibility[i][j] = 0;
+            prob[i][j] = 0;
         }
     }
     // accumulate
     for (int i = 0; i < population; ++i) {
         for (int j = 0; j < balls_number; ++j) {
-            possibility[j][order[i][j]]++;
+            prob[j][order[i][j]]++;
         }
     }
-    // normalize
-    for (int i = 0; i < balls_number; ++i) {
+    return prob;
+}
+
+double** GAMgr::edge_probability() {
+	double** prob;
+	prob = new double*[balls_number];
+	for (int i=0;i<balls_number;i++) {
+		prob[i] = new double[balls_number];
+	}
+	for (int i = 0; i < balls_number; ++i) {
         for (int j = 0; j < balls_number; ++j) {
-            possibility[i][j] /= population;
+            prob[i][j] = 0;
         }
     }
+	for (int i=0;i<population;i++) {
+        for (int j=0;j<balls_number-1;j++) {
+            prob[order[i][j]][order[i][j+1]]++;
+        }
+    }
+    return prob;
+}
+int* GAMgr::node(double** prob) {
+	int* new_order;
+	new_order = new int[balls_number];
+	for (int i=0;i<balls_number;i++) {
+		new_order[i] = -1;
+	}
+    
+    
     bool selected[balls_number];
     double temp[balls_number][balls_number];
-    for (int i = 0; i < population; ++i) {
+    
+    for (int l = 0; l < balls_number; ++l){
+        selected[l] = false;
+    }
+    for (int l = 0; l < balls_number; ++l){
+        for(int m=0;m<balls_number;++m){
+        	temp[l][m]=prob[l][m];
+		}
+    }
+    
+    for (int j = 0; j < balls_number; ++j) {
+        std::random_device rd;
+        std::default_random_engine gen = std::default_random_engine(rd());
+        std::uniform_real_distribution<double> dis(0,1);
+        double random = dis(gen);
+        // normalize
+        double normalize = 0;
         for (int l = 0; l < balls_number; ++l){
-            selected[l] = false;
+            if (selected[l] == false)
+                normalize += temp[j][l];
         }
-        for (int l = 0; l < balls_number; ++l){
-            for(int m=0;m<balls_number;++m){
-            	temp[l][m]=possibility[l][m];
-			}
+        for (int l = 0; l < balls_number; ++l) {
+            if (selected[l] == false)
+                temp[j][l] /= normalize;
         }
-        for (int j = 0; j < balls_number; ++j) {
-            std::random_device rd;
-            std::default_random_engine gen = std::default_random_engine(rd());
-            std::uniform_real_distribution<double> dis(0,1);
-            double random = dis(gen);
-            // normalize
-            double normalize = 0;
-            for (int l = 0; l < balls_number; ++l){
-                if (selected[l] == false)
-                    normalize += temp[j][l];
+        double possible = 0;
+        for (int k = 0; k < balls_number; ++k) {
+            if (selected[k]) continue;
+            possible += temp[j][k];
+            if (possible > random-1e-3) {
+                selected[k] = true;
+                new_order[j] = k;
+                break;
             }
-            for (int l = 0; l < balls_number; ++l) {
-                if (selected[l] == false)
-                    temp[j][l] /= normalize;
-            }
-            double possible = 0;
-            for (int k = 0; k < balls_number; ++k) {
-                if (selected[k]) continue;
-                possible += temp[j][k];
-                if (possible > random-1e-3) {
-                    selected[k] = true;
-                    new_order[i][j] = k;
+        }
+        if (new_order[j] == -1) {
+        	for (int k=0;k<balls_number;k++) {
+            	if (selected[k]==false) {
+            		selected[k] = true;
+                    new_order[j] = k;
                     break;
-                }
-            }
-            if (new_order[i][j] == -1) {
-            	for (int k=0;k<balls_number;k++) {
-	            	if (selected[k]==false) {
-	            		selected[k] = true;
-	                    new_order[i][j] = k;
-	                    break;
-					}
 				}
 			}
-        }
+		}
     }
 //    for (int i=0;i<population;i++) {
 //		for (int j=0;j<balls_number;j++) {
@@ -227,75 +242,92 @@ int** GAMgr::node() {
     return new_order;
 }
 
-int** GAMgr::edge() {
-	double prob[balls_number][balls_number] = {0};
-	for (int i=0;i<population;i++) {
-        for (int j=0;j<balls_number-1;j++) {
-            prob[order[i][j]][order[i][j+1]]++;
-        }
-    }
+int* GAMgr::edge(double** prob, double* node_prob) {
+	int* new_order;
+	new_order = new int[balls_number];
+	for (int i=0;i<balls_number;i++) {
+		new_order[i] = -1;
+	}
+	
+	
     bool selected[balls_number];
     double temp[balls_number][balls_number];
-    int** new_order;
-    new_order = new int* [population];
-    for (int i=0;i<population;i++) {
-    	new_order[i] = new int[balls_number];
-	}
-	for (int i=0;i<population;i++) {
-		for (int j=0;j<balls_number;j++) {
-			new_order[i][j] = -1;
+    double node_temp[balls_number];
+    
+	for (int j=0;j<balls_number;j++) {
+        selected[j] = false;
+    }
+    for (int j= 0;j<balls_number;j++ ){
+        for(int k=0;k<balls_number;k++) {
+        	temp[j][k]=prob[j][k];
 		}
+    }
+    for (int i=0;i<balls_number;i++) {
+    	node_temp[i] = node_prob[i];
 	}
-    for (int i=0;i<population;++i) {
-    	for (int j=0;j<balls_number;j++) {
-            selected[j] = false;
-        }
-        for (int j= 0;j<balls_number;j++ ){
-            for(int k=0;k<balls_number;k++) {
-            	temp[j][k]=prob[j][k];
+    
+    for (int j=0;j<balls_number;j++) {
+    	std::random_device rd;
+        std::default_random_engine gen = std::default_random_engine(rd());
+        std::uniform_real_distribution<double> dis(0,1);
+        double random = dis(gen);
+        if (j==0) {
+        	double node_normalize = 0;
+	        for (int l = 0; l < balls_number; ++l){
+	            node_normalize += node_temp[l];
+	        }
+	        for (int l = 0; l < balls_number; ++l) {
+	            node_temp[l] /= node_normalize;
+	        }
+			double node_probability = 0;
+        	for (int k=0;k<balls_number;k++) {
+        		if (selected[k]) continue;
+        		node_probability += node_temp[k];
+        		if (node_probability > random-1e-3) {
+        			selected[k] = true;
+                	new_order[0] = k;
+                	break;
+				}
 			}
-        }
-        
-        for (int j=0;j<balls_number;j++) {
-        	std::random_device rd;
-            std::default_random_engine gen = std::default_random_engine(rd());
-            std::uniform_real_distribution<double> dis(0,1);
-            double random = dis(gen);
-            if (j==0) {
-				int random_num = rand() % (balls_number);
-				new_order[i][j] = random_num;
-				selected[random_num] = true;
-			} else {
-				//normalize
-				double normalize = 0;
-        		for (int l=0;l<balls_number;l++){
-                    if (selected[l] == false) {
-                    	normalize += temp[new_order[i][j-1]][l];
-					} else {
-						temp[new_order[i][j-1]][l] = 0;
-					}
-                }
-                for (int l=0;l<balls_number;l++) {
-                    if (selected[l] == false)
-                        temp[new_order[i][j-1]][l] /= normalize;
-                }
-				double probability = 0;
+			if (new_order[0] == -1) {
             	for (int k=0;k<balls_number;k++) {
-            		if (selected[k]) continue;
-            		probability += temp[new_order[i][j-1]][k];
-            		if (probability > random-1e-3) {
-            			selected[k] = true;
-                    	new_order[i][j] = k;
-                    	break;
+	            	if (selected[k]==false) {
+	            		selected[k] = true;
+	                    new_order[0] = k;
+	                    break;
 					}
 				}
-				if (new_order[i][j] == -1) {
-	            	for (int k=0;k<balls_number;k++) {
-		            	if (selected[k]==false) {
-		            		selected[k] = true;
-		                    new_order[i][j] = k;
-		                    break;
-						}
+			}
+		} else {
+			//normalize
+			double normalize = 0;
+    		for (int l=0;l<balls_number;l++){
+                if (selected[l] == false) {
+                	normalize += temp[new_order[j-1]][l];
+				} else {
+					temp[new_order[j-1]][l] = 0;
+				}
+            }
+            for (int l=0;l<balls_number;l++) {
+                if (selected[l] == false)
+                    temp[new_order[j-1]][l] /= normalize;
+            }
+			double probability = 0;
+        	for (int k=0;k<balls_number;k++) {
+        		if (selected[k]) continue;
+        		probability += temp[new_order[j-1]][k];
+        		if (probability > random-1e-3) {
+        			selected[k] = true;
+                	new_order[j] = k;
+                	break;
+				}
+			}
+			if (new_order[j] == -1) {
+            	for (int k=0;k<balls_number;k++) {
+	            	if (selected[k]==false) {
+	            		selected[k] = true;
+	                    new_order[j] = k;
+	                    break;
 					}
 				}
 			}
@@ -311,44 +343,83 @@ int** GAMgr::edge() {
 }
 
 void GAMgr::crossover(int iteration){
-	std::random_device rd;
-    std::default_random_engine gen = std::default_random_engine(rd());
-    std::uniform_real_distribution<double> dis(0,1);
-    double random = dis(gen);
-	int** node_new_order;
-	int** edge_new_order;
-	node_new_order = node();
-	edge_new_order = edge();
-	double node_cost;
-	double edge_cost;
-//	std::cout <<1.0/iteration<<std::endl;
-	if (random > 1.0/iteration) {//do _best
-		node_cost = get_avg_cost(node_new_order);
-		edge_cost = get_avg_cost(edge_new_order);
-		if(node_cost < edge_cost) {
-			edge_or_node = 0;
-		} else {
-			edge_or_node = 1;
-		}
-	} else {//random
-		edge_or_node = rand() %  2;
+	int **new_order;
+    new_order = new int*[population];
+//    for (int i = 0; i < population; ++i) {
+//        new_order[i] = new int[balls_number];
+//    }
+
+    
+    double** node_prob;
+    double** edge_prob;
+    node_prob = node_probability();
+    edge_prob = edge_probability();
+    
+
+    if (iteration == 1) {
+    	node_p = 0.5;
+    	edge_p = 0.5;
+	} else {
+		node_p = 1.0 - exp(total_node_cost/take_node) / (exp(total_node_cost/take_node) + exp(total_edge_cost/take_edge));
+		edge_p = 1.0 - node_p;
 	}
 	
-	if (edge_or_node == 0) {
-		rtr(node_new_order, edge_or_node);
-	} else {
-		rtr(edge_new_order, edge_or_node);
+//	total_node_cost = 0;
+//	total_edge_cost = 0;
+//	take_node = 0;
+//	take_edge = 0;
+	
+	int* edge_or_node;
+	edge_or_node = new int[population];
+	for (int i=0;i<population;i++) {
+		if (i < 10) {
+			new_order[i] = node(node_prob);
+	    	total_node_cost += moving(new_order[i]);
+	    	take_node++;
+	    	edge_or_node[i] = 0;
+	    } else if (i < 20) {
+	    	new_order[i] = edge(edge_prob, node_prob[0]);
+			total_edge_cost += moving(new_order[i]);
+	    	take_edge++;
+	    	edge_or_node[i] = 1;
+		} else {
+			std::random_device rd;
+		    std::default_random_engine gen = std::default_random_engine(rd());
+		    std::uniform_real_distribution<double> dis(0,1);
+		    double random = dis(gen);
+		    if (random > node_p-1e-6) {
+		    	new_order[i] = node(node_prob);
+		    	total_node_cost += moving(new_order[i]);
+		    	take_node++;
+		    	edge_or_node[i] = 0;
+			} else {
+				new_order[i] = edge(edge_prob, node_prob[0]);
+				total_edge_cost += moving(new_order[i]);
+		    	take_edge++;
+		    	edge_or_node[i] = 1;
+			}
+		}
 	}
 
 
+	rtr(new_order, edge_or_node);
+
+	for (int i=0;i<balls_number;i++) {
+		delete [] node_prob[i];
+	}
+	delete [] node_prob;
+	
+	for (int i=0;i<balls_number;i++) {
+		delete [] edge_prob[i];
+	}
+	delete [] edge_prob;
+
     for (int i = 0; i < population; ++i) {
-        delete [] node_new_order[i];
+        delete [] new_order[i];
     }
-    for (int i = 0; i < population; ++i) {
-        delete [] edge_new_order[i];
-    }
-	delete [] node_new_order;
-	delete [] edge_new_order;
+	delete [] new_order;
+	
+	delete [] edge_or_node;
 }
 
 int GAMgr::node_distance(int* order_1, int* order_2) {
@@ -374,10 +445,11 @@ int GAMgr::edge_distance(int* order_1, int* order_2) {
 	}
 	return balls_number-1 - same;
 }
-void GAMgr::rtr(int** new_order, int edge_or_node) {
+
+void GAMgr::rtr(int** new_order, int* edge_or_node) {
     int distance = population;
     std::vector <int> index;
-    int window_size = 300;
+    int window_size = 100;
     std::vector<int> random_index;
     for (int i = 0; i < population; ++i) {
         random_index.push_back(i);
@@ -391,7 +463,7 @@ void GAMgr::rtr(int** new_order, int edge_or_node) {
         for (int j = 0; j < window_size; ++j) {
             int temp_index = random_index[j];
             int temp;
-            if (edge_or_node == 0) {
+            if (edge_or_node[i] == 0) {
                 temp = node_distance(new_order[i], order[temp_index]);
             } else {
                 temp = edge_distance(new_order[i], order[temp_index]);
@@ -420,11 +492,8 @@ void GAMgr::start(){
         selection();
         crossover(i+1);
         mutation();
-        if (edge_or_node == 0) {
-        	std::cout << i << ": " << best_cost << " " << cur_cost << " " << "node" << std::endl;
-		} else {
-			std::cout << i << ": " << best_cost << " " << cur_cost << " " << "edge" << std::endl;
-		}
+
+		std::cout << i << ": " << best_cost << " " << cur_cost << " " << "edge: " << edge_p << " node: " << node_p << std::endl;
         
         
     }

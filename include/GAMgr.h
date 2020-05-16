@@ -26,11 +26,13 @@ public:
     void random_initiailize();
     void selection();
     void mutation();
-    void rtr(int **, int);
+    void rtr(int **, int*);
     int node_distance(int*, int*);
     int edge_distance(int*, int*);
-    int** node();
-    int** edge();
+    double** edge_probability();
+    double** node_probability();
+    int* edge(double**, double*);
+    int* node(double**);
     double moving(int*);
     double get_avg_cost(int**);
     // node crossover
@@ -45,7 +47,13 @@ private:
     int* best_order;
     double* cost;
     double cur_cost;
-    int edge_or_node;
+    double total_node_cost=0;
+    double total_edge_cost=0;
+    int take_node=0;
+    int take_edge=0;
+    double node_p;
+    double edge_p;
+    
 };
 
 #endif /* GAMGR_H */
