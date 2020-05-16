@@ -26,9 +26,19 @@ void GAMgr::random_initiailize(){
 	}
 }
 
+void GAMgr::update_cost() {
+	for(int i=0;i<population;i++) {
+		mgr->reorder(order[i]);
+    	mgr->reset();
+    	mgr->moving_algorithm();
+    	cost[i] = mgr->get_cost();
+    	mgr->reorder_back(order[i]);
+	}
+}
+
 void GAMgr::mutation() {
     std::vector<std::pair<int, int>> possible_pair;
-    for (int i = 0; i < balls_number; ++i) {
+    for (int i = 0; i < balls_number-1; ++i) {
         for (int j = i+1; j < balls_number; ++j) {
             possible_pair.push_back(std::make_pair(i, j));
         }
@@ -449,7 +459,7 @@ int GAMgr::edge_distance(int* order_1, int* order_2) {
 void GAMgr::rtr(int** new_order, int* edge_or_node) {
     int distance = population;
     std::vector <int> index;
-    int window_size = 100;
+    int window_size = 200;
     std::vector<int> random_index;
     for (int i = 0; i < population; ++i) {
         random_index.push_back(i);
@@ -488,9 +498,11 @@ void GAMgr::rtr(int** new_order, int* edge_or_node) {
 
 void GAMgr::start(){
     random_initiailize();
-    for (int i = 0; i < 100; ++i) {
+    for (int i = 0; i < 200; ++i) {
         selection();
+        update_cost();
         crossover(i+1);
+        update_cost();
         mutation();
 
 		std::cout << i << ": " << best_cost << " " << cur_cost << " " << "edge: " << edge_p << " node: " << node_p << std::endl;

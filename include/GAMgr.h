@@ -35,6 +35,7 @@ public:
     int* node(double**);
     double moving(int*);
     double get_avg_cost(int**);
+    void update_cost();
     // node crossover
     void crossover(int);
     void start();

@@ -52,8 +52,8 @@ int main(int argc, char** argv)
     MovingMgr* moving_mgr = new MovingMgr();
     parse_input(input_file, moving_mgr);
 
-    // SAMgr* mgr = new SAMgr(moving_mgr, 1000, 1, 0.98);
-    GAMgr* mgr = new GAMgr(moving_mgr, 300, moving_mgr->get_number());
+//    SAMgr* mgr = new SAMgr(moving_mgr, 1000000, 1, 0.99);
+    GAMgr* mgr = new GAMgr(moving_mgr, 500, moving_mgr->get_number());
     mgr->start();
 
     moving_mgr->write_result(output_file);
