@@ -7,7 +7,7 @@
 #include <algorithm> 
 #include <vector>
 #include <chrono>
-#include <random>
+#include <assert.h>
 
 void GAMgr::random_initiailize(){
 	std::vector<int> foo;
@@ -27,28 +27,32 @@ void GAMgr::random_initiailize(){
 }
 
 void GAMgr::mutation() {
-    int first_index;
-    int second_index;
-    for(int i=0;i<population;i++) {
-    	first_index = rand() % (mgr->get_number());
-        second_index = rand() % (mgr->get_number());
-        /* avoid selecting same index */
-        do {
-            second_index = rand() % (mgr->get_number());
-        } while (first_index == second_index);
-        
-        int temp = order[i][first_index];
-        order[i][first_index] = order[i][second_index];
-        order[i][second_index] = temp;
-        double mut_cost = moving(order[i]);
-        if (mut_cost < cost[i]) {
-        	cost[i] = mut_cost;
-		} else {//swap back
-			temp = order[i][first_index];
-        	order[i][first_index] = order[i][second_index];
-        	order[i][second_index] = temp;
-		}
-	}
+    std::vector<std::pair<int, int>> possible_pair;
+    for (int i = 0; i < balls_number; ++i) {
+        for (int j = i+1; j < balls_number; ++j) {
+            possible_pair.push_back(std::make_pair(i, j));
+        }
+    }
+    // assert(possible_pair.size() == (population*(population-1)/2));
+    for (int i = 0; i < population; ++i){
+        unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+        shuffle (possible_pair.begin(), possible_pair.end(), std::default_random_engine(seed));
+        for (int j = 0; j < balls_number; ++j) {
+            int first_index = possible_pair[j].first;
+            int second_index = possible_pair[j].second;
+            int temp = order[i][first_index];
+            order[i][first_index] = order[i][second_index];
+            order[i][second_index] = temp;
+            double mut_cost = moving(order[i]);
+            if (mut_cost < cost[i]) {
+                cost[i] = mut_cost;
+            } else {//swap back
+                temp = order[i][first_index];
+                order[i][first_index] = order[i][second_index];
+                order[i][second_index] = temp;
+            }
+    }
+    }
 }
 
 double GAMgr::moving(int* order) {
