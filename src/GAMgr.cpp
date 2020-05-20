@@ -275,7 +275,7 @@ int* GAMgr::node(double** prob) {
 //	for (int j=0;j<balls_number;j++) {
 //		std::cout << new_order[j] << ",";
 //	}
-	std::cout << std::endl;
+//	std::cout << std::endl;
     return new_order;
 }
 
@@ -373,7 +373,7 @@ int* GAMgr::edge(double** prob, double* node_prob) {
 //    for (int j=0;j<balls_number;j++) {
 //		std::cout << new_order[j] << ",";
 //	}
-	std::cout << std::endl;
+//	std::cout << std::endl;
 	return new_order;
 }
 
