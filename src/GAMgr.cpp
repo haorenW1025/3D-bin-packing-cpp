@@ -395,7 +395,8 @@ void GAMgr::crossover(int iteration){
     	node_p = 0.5;
     	edge_p = 0.5;
 	} else {
-		node_p = 1.0 - exp(total_node_cost/take_node) / (exp(total_node_cost/take_node) + exp(total_edge_cost/take_edge));
+		node_p = 1.0 - exp(total_node_cost/take_node/temperature) /
+            (exp(total_node_cost/take_node/temperature) + exp(total_edge_cost/take_edge/temperature));
 		edge_p = 1.0 - node_p;
 	}
 	
@@ -529,6 +530,7 @@ void GAMgr::start(){
         crossover(i+1);
         update_cost();
         mutation();
+        temperature *= 0.95;
 
 		std::cout << i << ": " << best_cost << " " << cur_cost << " " << "edge: " << edge_p << " node: " << node_p << std::endl;
         

@@ -8,6 +8,7 @@ class GAMgr
 {
 public:
     GAMgr(MovingMgr* m, int p, int n): mgr(m), population(p), balls_number(n){
+        temperature = 200;
         order = new int*[p];
         for (int i = 0; i < population; ++i) {
             order[i] = new int[balls_number];
@@ -41,6 +42,7 @@ public:
     void start();
 private:
 	MovingMgr* mgr;
+    double temperature;
     int population;
     int balls_number;
     int** order;
