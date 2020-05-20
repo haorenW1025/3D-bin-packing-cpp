@@ -167,6 +167,20 @@ double** GAMgr::node_probability() {
             prob[j][order[i][j]]++;
         }
     }
+    //add radom
+    double normalize;
+    for (int i=0;i<balls_number;i++) {
+    	normalize = 0;
+    	for (int j=0;j<balls_number;j++) {
+    		normalize += prob[i][j];
+		}
+		for (int j=0;j<balls_number;j++) {
+			prob[i][j] /= normalize;
+		}
+		for (int j=0;j<balls_number;j++) {
+			prob[i][j] = 0.1 * 1.0/balls_number + 0.9 * prob[i][j];
+		}
+	}
     return prob;
 }
 
@@ -186,6 +200,20 @@ double** GAMgr::edge_probability() {
             prob[order[i][j]][order[i][j+1]]++;
         }
     }
+    //add radom
+    double normalize;
+    for (int i=0;i<balls_number;i++) {
+    	normalize = 0;
+    	for (int j=0;j<balls_number;j++) {
+    		normalize += prob[i][j];
+		}
+		for (int j=0;j<balls_number;j++) {
+			prob[i][j] /= normalize;
+		}
+		for (int j=0;j<balls_number;j++) {
+			prob[i][j] = 0.1 * 1.0/balls_number + 0.9 * prob[i][j];
+		}
+	}
     return prob;
 }
 int* GAMgr::node(double** prob) {
@@ -243,12 +271,11 @@ int* GAMgr::node(double** prob) {
 			}
 		}
     }
-//    for (int i=0;i<population;i++) {
-//		for (int j=0;j<balls_number;j++) {
-//			std::cout << new_order[i][j] << ",";
-//		}
-//		std::cout << std::endl;
+
+//	for (int j=0;j<balls_number;j++) {
+//		std::cout << new_order[j] << ",";
 //	}
+	std::cout << std::endl;
     return new_order;
 }
 
@@ -343,12 +370,10 @@ int* GAMgr::edge(double** prob, double* node_prob) {
 			}
 		}
 	}
-//	for (int i=0;i<population;i++) {
-//		for (int j=0;j<balls_number;j++) {
-//			std::cout << new_order[i][j];
-//		}
-//		std::cout << std::endl;
+//    for (int j=0;j<balls_number;j++) {
+//		std::cout << new_order[j] << ",";
 //	}
+	std::cout << std::endl;
 	return new_order;
 }
 
