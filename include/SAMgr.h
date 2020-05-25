@@ -4,12 +4,12 @@
 #include <cstdlib>
 #include <math.h>
 #include <iostream>
-#include "MovingMgr.h"
+#include "CubeMovingMgr.h"
 
 class SAMgr
 {
 public:
-    SAMgr(MovingMgr* m, int temp, int min_temp, double s):
+    SAMgr(CubeMovingMgr* m, int temp, int min_temp, double s):
         mgr(m),currentTemperature(temp), minTemperature(min_temp), scalingParameter(s){};
     virtual ~SAMgr(){};
 
@@ -18,7 +18,7 @@ public:
     void print_result();
 
 private:
-    MovingMgr* mgr;
+    CubeMovingMgr* mgr;
     int iteration = 0;
     int maxIterationPerTemp = 1000;
     double scalingParameter;

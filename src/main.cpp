@@ -2,29 +2,29 @@
 #include <fstream>
 #include <cmath>
 #include <string.h>
-// #include "CubeMovingMgr.h"
+#include "CubeMovingMgr.h"
 #include "SAMgr.h"
 #include "GAMgr.h"
 
 using namespace std;
 
-void parse_balls(fstream& input_file, MovingMgr* mgr) {
-    string line;
-    /* get box dimension */
-    getline(input_file, line);
-    mgr->set_boxDim(stod(line));
-
-    /* get number of balls */
-    getline(input_file, line);
-    int number = stoi(line);
-
-    for (int i = 0; i < number; ++i) {
-        getline(input_file, line);
-        mgr->add_sphere(stod(line));
-
-    }
-    input_file.close();
-}
+//void parse_balls(fstream& input_file, MovingMgr* mgr) {
+//    string line;
+//    /* get box dimension */
+//    getline(input_file, line);
+//    mgr->set_boxDim(stod(line));
+//
+//    /* get number of balls */
+//    getline(input_file, line);
+//    int number = stoi(line);
+//
+//    for (int i = 0; i < number; ++i) {
+//        getline(input_file, line);
+//        mgr->add_sphere(stod(line));
+//
+//    }
+//    input_file.close();
+//}
 
 void parse_cubes(fstream& input_file, CubeMovingMgr* mgr) {
     string line;
@@ -49,6 +49,7 @@ void parse_cubes(fstream& input_file, CubeMovingMgr* mgr) {
         end = line.length();
         temp = line.substr(start, end-start);
         double z = stod(temp);
+        cout << x << " " << y << " " << z <<endl;
         mgr->add_cube(x, y, z);
     }
 }
@@ -77,19 +78,19 @@ int main(int argc, char** argv)
     /* set random seed */
     srand( time(NULL) );
 
-    MovingMgr* moving_mgr = new CubeMovingMgr();
-    parse_cubes(input_file);
-    parse_balls(input_file, moving_mgr);
+    CubeMovingMgr* moving_mgr = new CubeMovingMgr();
+    parse_cubes(input_file, moving_mgr);
+//    parse_balls(input_file, moving_mgr);
 
-    SAMgr* mgr = new SAMgr(moving_mgr, 1000000, 1, 0.995);
-    GAMgr* GAmgr = new GAMgr(moving_mgr, 1000, moving_mgr->get_number());
-    GAmgr->start(output_file);
-    SAMgr* SAmgr = new SAMgr(moving_mgr, 100, 1, 0.99);
-    SAmgr->start(output_file);
+    SAMgr* SAmgr = new SAMgr(moving_mgr, 10000, 1, 0.99);
+//    GAMgr* GAmgr = new GAMgr(moving_mgr, 1000, moving_mgr->get_number());
+//    GAmgr->start(output_file);
+//    SAMgr* SAmgr = new SAMgr(moving_mgr, 100, 1, 0.99);
+    SAmgr->start();
 
 
     delete(moving_mgr);
-    delete(GAmgr);
+//    delete(GAmgr);
     delete(SAmgr);
 	return 0;
 }

@@ -1,13 +1,13 @@
 #ifndef GAMGR_H
 #define GAMGR_H
 
-#include "MovingMgr.h"
+#include "CubeMovingMgr.h"
 #include <iostream>
 
 class GAMgr
 {
 public:
-    GAMgr(MovingMgr* m, int p, int n): mgr(m), population(p), balls_number(n){
+    GAMgr(CubeMovingMgr* m, int p, int n): mgr(m), population(p), balls_number(n){
         temperature = 200;
         order = new int*[p];
         for (int i = 0; i < population; ++i) {
@@ -41,7 +41,7 @@ public:
     void crossover(int);
     void start();
 private:
-	MovingMgr* mgr;
+	CubeMovingMgr* mgr;
     double temperature;
     int population;
     int balls_number;

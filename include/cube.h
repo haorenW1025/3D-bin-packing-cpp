@@ -7,7 +7,7 @@ class Cube
 {
 public:
     Cube(): x_length(0), y_length(0), z_length(0){}
-    Cube(double a, double b, double c): x_length(a), y_length(a), z_length(a), rotation(0){};
+    Cube(double a, double b, double c): x_length(a), y_length(b), z_length(c), rotation(0){};
     ~Cube(){};
     double get_x() {return x; }
     double get_y() {return y; }
@@ -51,9 +51,10 @@ public:
     void set_x(double a) {x=a;}
     void set_y(double b) {y=b;}
     void set_z(double c) {z=c;}
+    
+    int rotation;
 
 private:
-    int rotation;
     double x_length;
     double y_length;
     double z_length;
