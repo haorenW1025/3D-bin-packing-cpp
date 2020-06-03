@@ -6,6 +6,7 @@
 
 void SAMgr::start() {
     /* get initial solution */
+    mgr->reset();
     mgr->moving_algorithm();
     double cost = mgr->get_cost();
     std::cout << "initial solution" << std::endl;

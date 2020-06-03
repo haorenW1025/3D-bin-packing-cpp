@@ -178,7 +178,7 @@ double** GAMgr::node_probability() {
 			prob[i][j] /= normalize;
 		}
 		for (int j=0;j<balls_number;j++) {
-			prob[i][j] = 0.1 * 1.0/balls_number + 0.9 * prob[i][j];
+			prob[i][j] = 0.4 * 1.0/balls_number + 0.6 * prob[i][j];
 		}
 	}
     return prob;
@@ -211,7 +211,7 @@ double** GAMgr::edge_probability() {
 			prob[i][j] /= normalize;
 		}
 		for (int j=0;j<balls_number;j++) {
-			prob[i][j] = 0.1 * 1.0/balls_number + 0.9 * prob[i][j];
+			prob[i][j] = 0.4 * 1.0/balls_number + 0.6 * prob[i][j];
 		}
 	}
     return prob;
@@ -395,8 +395,7 @@ void GAMgr::crossover(int iteration){
     	node_p = 0.5;
     	edge_p = 0.5;
 	} else {
-		node_p = 1.0 - exp(total_node_cost/take_node/temperature) /
-            (exp(total_node_cost/take_node/temperature) + exp(total_edge_cost/take_edge/temperature));
+		node_p = 1.0 - exp(total_node_cost/take_node) / (exp(total_node_cost/take_node) + exp(total_edge_cost/take_edge));
 		edge_p = 1.0 - node_p;
 	}
 	
@@ -408,32 +407,20 @@ void GAMgr::crossover(int iteration){
 	int* edge_or_node;
 	edge_or_node = new int[population];
 	for (int i=0;i<population;i++) {
-		if (i < 10) {
-			new_order[i] = node(node_prob);
+		std::random_device rd;
+	    std::default_random_engine gen = std::default_random_engine(rd());
+	    std::uniform_real_distribution<double> dis(0,1);
+	    double random = dis(gen);
+	    if (random > node_p-1e-6) {
+	    	new_order[i] = node(node_prob);
 	    	total_node_cost += moving(new_order[i]);
 	    	take_node++;
 	    	edge_or_node[i] = 0;
-	    } else if (i < 20) {
-	    	new_order[i] = edge(edge_prob, node_prob[0]);
+		} else {
+			new_order[i] = edge(edge_prob, node_prob[0]);
 			total_edge_cost += moving(new_order[i]);
 	    	take_edge++;
 	    	edge_or_node[i] = 1;
-		} else {
-			std::random_device rd;
-		    std::default_random_engine gen = std::default_random_engine(rd());
-		    std::uniform_real_distribution<double> dis(0,1);
-		    double random = dis(gen);
-		    if (random > node_p-1e-6) {
-		    	new_order[i] = node(node_prob);
-		    	total_node_cost += moving(new_order[i]);
-		    	take_node++;
-		    	edge_or_node[i] = 0;
-			} else {
-				new_order[i] = edge(edge_prob, node_prob[0]);
-				total_edge_cost += moving(new_order[i]);
-		    	take_edge++;
-		    	edge_or_node[i] = 1;
-			}
 		}
 	}
 
@@ -485,7 +472,7 @@ int GAMgr::edge_distance(int* order_1, int* order_2) {
 void GAMgr::rtr(int** new_order, int* edge_or_node) {
     int distance = population;
     std::vector <int> index;
-    int window_size = 200;
+    int window_size = 100;
     std::vector<int> random_index;
     for (int i = 0; i < population; ++i) {
         random_index.push_back(i);
@@ -530,7 +517,6 @@ void GAMgr::start(){
         crossover(i+1);
         update_cost();
         mutation();
-        temperature *= 0.95;
 
 		std::cout << i << ": " << best_cost << " " << cur_cost << " " << "edge: " << edge_p << " node: " << node_p << std::endl;
         

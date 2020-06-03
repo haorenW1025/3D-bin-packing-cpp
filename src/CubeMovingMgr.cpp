@@ -5,13 +5,13 @@
 using namespace std;
 
 bool CubeMovingMgr::init_moving(int index, int cubes_count, int rot){
-    cubes[index].set_x(box_dim-cubes[index].get_r(rot)[0]/2.0);
-    cubes[index].set_y(box_dim-cubes[index].get_r(rot)[1]/2.0);
-    cubes[index].set_z(box_dim-cubes[index].get_r(rot)[2]/2.0);
+    cubes[index].set_x(box_dim-cubes[index].get_rx(rot)/2.0);
+    cubes[index].set_y(box_dim-cubes[index].get_ry(rot)/2.0);
+    cubes[index].set_z(box_dim-cubes[index].get_rz(rot)/2.0);
     for(int i = cubes_count; i < index; i++) {
-        double length_x=cubes[i].get_r(cubes[i].rotation)[0]/2.0+cubes[index].get_r(rot)[0]/2.0;
-        double length_y=cubes[i].get_r(cubes[i].rotation)[1]/2.0+cubes[index].get_r(rot)[1]/2.0;
-        double length_z=cubes[i].get_r(cubes[i].rotation)[2]/2.0+cubes[index].get_r(rot)[2]/2.0;
+        double length_x=cubes[i].get_rx(cubes[i].rotation)/2.0+cubes[index].get_rx(rot)/2.0;
+        double length_y=cubes[i].get_ry(cubes[i].rotation)/2.0+cubes[index].get_ry(rot)/2.0;
+        double length_z=cubes[i].get_rz(cubes[i].rotation)/2.0+cubes[index].get_rz(rot)/2.0;
         
         double distance_x=abs(cubes[index].get_x()-cubes[i].get_x());
         double distance_y=abs(cubes[index].get_y()-cubes[i].get_y());
@@ -27,16 +27,16 @@ void CubeMovingMgr::moving(int index, int cubes_count, int axis, int rot) {
     switch(axis) {
         case 0: {
                 double cur_x=cubes[index].get_x();
-                double max_x=cubes[index].get_r(rot)[0]/2.0;
+                double max_x=cubes[index].get_rx(rot)/2.0;
                 cubes[index].set_x(max_x);
                 for(int i=cubes_count;i<index;i++) {
-                	double length_y=cubes[i].get_r(cubes[i].rotation)[1]/2.0+cubes[index].get_r(rot)[1]/2.0;
-        			double length_z=cubes[i].get_r(cubes[i].rotation)[2]/2.0+cubes[index].get_r(rot)[2]/2.0;
+                	double length_y=cubes[i].get_ry(cubes[i].rotation)/2.0+cubes[index].get_ry(rot)/2.0;
+        			double length_z=cubes[i].get_rz(cubes[i].rotation)/2.0+cubes[index].get_rz(rot)/2.0;
 
                     double distance_y=abs(cubes[index].get_y()-cubes[i].get_y());
                     double distance_z=abs(cubes[index].get_z()-cubes[i].get_z());
                     if (distance_y+eps < length_y && distance_z+eps < length_z) {
-                        double x=cubes[i].get_x()+cubes[i].get_r(cubes[i].rotation)[0]/2.0+cubes[index].get_r(rot)[0]/2.0;
+                        double x=cubes[i].get_x()+cubes[i].get_rx(cubes[i].rotation)/2.0+cubes[index].get_rx(rot)/2.0;
                         if (x>max_x && x<=cur_x+eps) {
                             cubes[index].set_x(x);
                             max_x=x;
@@ -47,16 +47,16 @@ void CubeMovingMgr::moving(int index, int cubes_count, int axis, int rot) {
             break;
         case 1: {
         		double cur_y=cubes[index].get_y();
-                double max_y=cubes[index].get_r(rot)[1]/2.0;
+                double max_y=cubes[index].get_ry(rot)/2.0;
                 cubes[index].set_y(max_y);
                 for(int i=cubes_count;i<index;i++) {
-                	double length_x=cubes[i].get_r(cubes[i].rotation)[0]/2.0+cubes[index].get_r(rot)[0]/2.0;
-        			double length_z=cubes[i].get_r(cubes[i].rotation)[2]/2.0+cubes[index].get_r(rot)[2]/2.0;
+                	double length_x=cubes[i].get_rx(cubes[i].rotation)/2.0+cubes[index].get_rx(rot)/2.0;
+        			double length_z=cubes[i].get_rz(cubes[i].rotation)/2.0+cubes[index].get_rz(rot)/2.0;
 
                     double distance_x=abs(cubes[index].get_x()-cubes[i].get_x());
                     double distance_z=abs(cubes[index].get_z()-cubes[i].get_z());
                     if (distance_x+eps < length_x && distance_z+eps < length_z) {
-                        double y=cubes[i].get_y()+cubes[i].get_r(cubes[i].rotation)[1]/2.0+cubes[index].get_r(rot)[1]/2.0;
+                        double y=cubes[i].get_y()+cubes[i].get_ry(cubes[i].rotation)/2.0+cubes[index].get_ry(rot)/2.0;
                         if (y>max_y && y<=cur_y+eps) {
                             cubes[index].set_y(y);
                             max_y=y;
@@ -67,16 +67,16 @@ void CubeMovingMgr::moving(int index, int cubes_count, int axis, int rot) {
             break;
         case 2: {
         		double cur_z=cubes[index].get_z();
-                double max_z=cubes[index].get_r(rot)[2]/2.0;
+                double max_z=cubes[index].get_rz(rot)/2.0;
                 cubes[index].set_z(max_z);
                 for(int i=cubes_count;i<index;i++) {
-                	double length_x=cubes[i].get_r(cubes[i].rotation)[0]/2.0+cubes[index].get_r(rot)[0]/2.0;
-        			double length_y=cubes[i].get_r(cubes[i].rotation)[1]/2.0+cubes[index].get_r(rot)[1]/2.0;
+                	double length_x=cubes[i].get_rx(cubes[i].rotation)/2.0+cubes[index].get_rx(rot)/2.0;
+        			double length_y=cubes[i].get_ry(cubes[i].rotation)/2.0+cubes[index].get_ry(rot)/2.0;
 
                     double distance_x=abs(cubes[index].get_x()-cubes[i].get_x());
                     double distance_y=abs(cubes[index].get_y()-cubes[i].get_y());
                     if (distance_x+eps < length_x && distance_y+eps < length_y) {
-                        double z=cubes[i].get_z()+cubes[i].get_r(cubes[i].rotation)[2]/2.0+cubes[index].get_r(rot)[2]/2.0;
+                        double z=cubes[i].get_z()+cubes[i].get_rz(cubes[i].rotation)/2.0+cubes[index].get_rz(rot)/2.0;
                         if (z>max_z && z<=cur_z+eps) {
                             cubes[index].set_z(z);
                             max_z=z;
@@ -93,14 +93,14 @@ double CubeMovingMgr::calculate_volume(int index){
 	double max_y=0;
 	double max_z=0;
 	for(int i=cubes_count;i<index+1;i++) {
-		if (cubes[i].get_x()+cubes[i].get_r(cubes[i].rotation)[0]/2.0>max_x) {
-			max_x=cubes[i].get_x()+cubes[i].get_r(cubes[i].rotation)[0]/2.0;
+		if (cubes[i].get_x()+cubes[i].get_rx(cubes[i].rotation)/2.0>max_x) {
+			max_x=cubes[i].get_x()+cubes[i].get_rx(cubes[i].rotation)/2.0;
 		}
-		if (cubes[i].get_y()+cubes[i].get_r(cubes[i].rotation)[1]/2.0>max_y) {
-			max_y=cubes[i].get_y()+cubes[i].get_r(cubes[i].rotation)[1]/2.0;
+		if (cubes[i].get_y()+cubes[i].get_ry(cubes[i].rotation)/2.0>max_y) {
+			max_y=cubes[i].get_y()+cubes[i].get_ry(cubes[i].rotation)/2.0;
 		}
-		if (cubes[i].get_z()+cubes[i].get_r(cubes[i].rotation)[2]/2.0>max_z) {
-			max_z=cubes[i].get_z()+cubes[i].get_r(cubes[i].rotation)[2]/2.0;
+		if (cubes[i].get_z()+cubes[i].get_rz(cubes[i].rotation)/2.0>max_z) {
+			max_z=cubes[i].get_z()+cubes[i].get_rz(cubes[i].rotation)/2.0;
 		}
 	}
 	return max_x*max_y*max_z;
@@ -118,6 +118,7 @@ void CubeMovingMgr::moving_algorithm(){
         bool enough_space=false;
     	for (int i=0;i<6;i++) {//rotation
     		if (init_moving(count, cubes_count, i)) {
+    			cubes[count].rotation=i;
     			enough_space=true;
 	            double init_x=cubes[count].get_x();
 	            double init_y=cubes[count].get_y();
@@ -139,7 +140,7 @@ void CubeMovingMgr::moving_algorithm(){
 	                cur_y=cubes[count].get_y();
 	                cur_z=cubes[count].get_z();
 	        	}
-	        	if (calculate_volume(count) < minimum_volume) {
+	        	if (calculate_volume(count) < minimum_volume+eps) {
 	        		best_x=cubes[count].get_x();
 	            	best_y=cubes[count].get_y();
 	            	best_z=cubes[count].get_z();
@@ -166,7 +167,7 @@ void CubeMovingMgr::moving_algorithm(){
 	                cur_y=cubes[count].get_y();
 	                cur_z=cubes[count].get_z();
 	        	}
-	        	if (calculate_volume(count) < minimum_volume) {
+	        	if (calculate_volume(count) < minimum_volume+eps) {
 	        		best_x=cubes[count].get_x();
 	            	best_y=cubes[count].get_y();
 	            	best_z=cubes[count].get_z();
@@ -193,7 +194,7 @@ void CubeMovingMgr::moving_algorithm(){
 	                cur_y=cubes[count].get_y();
 	                cur_z=cubes[count].get_z();
 	        	}
-	        	if (calculate_volume(count) < minimum_volume) {
+	        	if (calculate_volume(count) < minimum_volume+eps) {
 	        		best_x=cubes[count].get_x();
 	            	best_y=cubes[count].get_y();
 	            	best_z=cubes[count].get_z();
@@ -220,7 +221,7 @@ void CubeMovingMgr::moving_algorithm(){
 	                cur_y=cubes[count].get_y();
 	                cur_z=cubes[count].get_z();
 	        	}
-	        	if (calculate_volume(count) < minimum_volume) {
+	        	if (calculate_volume(count) < minimum_volume+eps) {
 	        		best_x=cubes[count].get_x();
 	            	best_y=cubes[count].get_y();
 	            	best_z=cubes[count].get_z();
@@ -247,7 +248,7 @@ void CubeMovingMgr::moving_algorithm(){
 	                cur_y=cubes[count].get_y();
 	                cur_z=cubes[count].get_z();
 	        	}
-	        	if (calculate_volume(count) < minimum_volume) {
+	        	if (calculate_volume(count) < minimum_volume+eps) {
 	        		best_x=cubes[count].get_x();
 	            	best_y=cubes[count].get_y();
 	            	best_z=cubes[count].get_z();
@@ -274,7 +275,7 @@ void CubeMovingMgr::moving_algorithm(){
 	                cur_y=cubes[count].get_y();
 	                cur_z=cubes[count].get_z();
 	        	}
-	        	if (calculate_volume(count) < minimum_volume) {
+	        	if (calculate_volume(count) < minimum_volume+eps) {
 	        		best_x=cubes[count].get_x();
 	            	best_y=cubes[count].get_y();
 	            	best_z=cubes[count].get_z();
@@ -308,7 +309,7 @@ void CubeMovingMgr::reset() {
 }
 
 void CubeMovingMgr::swap(int first_index, int second_index) {
-    Cube temp = Cube(cubes[first_index].get_r(0)[0], cubes[first_index].get_r(0)[1], cubes[first_index].get_r(0)[2]);
+    Cube temp = Cube(cubes[first_index].get_rx(0), cubes[first_index].get_ry(0), cubes[first_index].get_rz(0));
     cubes[first_index] = cubes[second_index];
     cubes[second_index] = temp;
 }
@@ -316,7 +317,7 @@ void CubeMovingMgr::swap(int first_index, int second_index) {
 void CubeMovingMgr::reorder(int* order) {
 	Cube temp[get_number()];
 	for(int i=0;i<get_number();i++) {
-		temp[i] = Cube(cubes[i].get_r(0)[0], cubes[i].get_r(0)[1], cubes[i].get_r(0)[2]);
+		temp[i] = Cube(cubes[i].get_rx(0), cubes[i].get_ry(0), cubes[i].get_rz(0));
 	}
 	for(int i=0;i<get_number();i++) {
 		cubes[i] = temp[order[i]]; 	
@@ -326,7 +327,7 @@ void CubeMovingMgr::reorder(int* order) {
 void CubeMovingMgr::reorder_back(int* order) {
 	Cube temp[get_number()];
 	for(int i=0;i<get_number();i++) {
-		temp[i] = Cube(cubes[i].get_r(0)[0], cubes[i].get_r(0)[1], cubes[i].get_r(0)[2]);
+		temp[i] = Cube(cubes[i].get_rx(0), cubes[i].get_ry(0), cubes[i].get_rz(0));
 	}
 	for(int i=0;i<get_number();i++) {
 		cubes[order[i]] = temp[i]; 	
@@ -337,8 +338,8 @@ void CubeMovingMgr::write_result(fstream& output) {
     output << box_dim << endl;
     output << box_count << endl;
     for (int i = 0; i < get_number(); ++i) {
-        output << indexToBox[i] << " " << cubes[i].get_r(cubes[i].rotation)[0] << " " << cubes[i].get_r(cubes[i].rotation)[1]
-		<< " " << cubes[i].get_r(cubes[i].rotation)[2] << " " << cubes[i].get_x() << " " << cubes[i].get_y() << " " << cubes[i].get_z() << endl;
+        output << indexToBox[i] << " " << cubes[i].get_rx(cubes[i].rotation) << " " << cubes[i].get_ry(cubes[i].rotation)
+		<< " " << cubes[i].get_rz(cubes[i].rotation) << " " << cubes[i].get_x() << " " << cubes[i].get_y() << " " << cubes[i].get_z() << endl;
     }
     output.close();
 }
@@ -350,8 +351,8 @@ void CubeMovingMgr::print_result() {
     for (int i = 0; i < box_count; i++) {
         cout << "Box number " << i+1 << ": " << endl;
         while (indexToBox[index] == i+1) {
-            cout << "  Cube " << index << ": length = (" << cubes[index].get_r(cubes[index].rotation)[0] << ", " << cubes[index].get_r(cubes[index].rotation)[1]
-		<< ", " << cubes[index].get_r(cubes[index].rotation)[2] << ")" << " Position = (" 
+            cout << "  Cube " << index << ": length = (" << cubes[index].get_rx(cubes[index].rotation) << ", " << cubes[index].get_ry(cubes[index].rotation)
+		<< ", " << cubes[index].get_rz(cubes[index].rotation) << ")" << " Position = (" 
                 << cubes[index].get_x() << ", " << cubes[index].get_y() << ", " << cubes[index].get_z() << ")" << endl;
             index++;
         }

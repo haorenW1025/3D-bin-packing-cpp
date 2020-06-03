@@ -20,6 +20,7 @@ bool MovingMgr::init_moving(int index, int balls_count){
     return true;
 }
 
+
 void MovingMgr::moving(int index, int balls_count, int axis) {
     switch(axis) {
         case 0: {
@@ -88,6 +89,7 @@ void MovingMgr::moving(int index, int balls_count, int axis) {
     }
 }
 
+
 double MovingMgr::calculate_volume(int index){
 	double max_x=0;
 	double max_y=0;
@@ -105,6 +107,7 @@ double MovingMgr::calculate_volume(int index){
 	}
 	return max_x*max_y*max_z;
 }
+
 /* Main Moving function */
 void MovingMgr::moving_algorithm(){
     int count = 0;
@@ -134,7 +137,7 @@ void MovingMgr::moving_algorithm(){
                 cur_y=balls[count].get_y();
                 cur_z=balls[count].get_z();
         	}
-        	if (calculate_volume(count) < minimum_volume) {
+        	if (calculate_volume(count) < minimum_volume+eps) {
         		best_x=balls[count].get_x();
             	best_y=balls[count].get_y();
             	best_z=balls[count].get_z();
@@ -160,7 +163,7 @@ void MovingMgr::moving_algorithm(){
                 cur_y=balls[count].get_y();
                 cur_z=balls[count].get_z();
         	}
-        	if (calculate_volume(count) < minimum_volume) {
+        	if (calculate_volume(count) < minimum_volume+eps) {
         		best_x=balls[count].get_x();
             	best_y=balls[count].get_y();
             	best_z=balls[count].get_z();
@@ -186,7 +189,7 @@ void MovingMgr::moving_algorithm(){
                 cur_y=balls[count].get_y();
                 cur_z=balls[count].get_z();
         	}
-        	if (calculate_volume(count) < minimum_volume) {
+        	if (calculate_volume(count) < minimum_volume+eps) {
         		best_x=balls[count].get_x();
             	best_y=balls[count].get_y();
             	best_z=balls[count].get_z();
@@ -212,7 +215,7 @@ void MovingMgr::moving_algorithm(){
                 cur_y=balls[count].get_y();
                 cur_z=balls[count].get_z();
         	}
-        	if (calculate_volume(count) < minimum_volume) {
+        	if (calculate_volume(count) < minimum_volume+eps) {
         		best_x=balls[count].get_x();
             	best_y=balls[count].get_y();
             	best_z=balls[count].get_z();
@@ -238,7 +241,7 @@ void MovingMgr::moving_algorithm(){
                 cur_y=balls[count].get_y();
                 cur_z=balls[count].get_z();
         	}
-        	if (calculate_volume(count) < minimum_volume) {
+        	if (calculate_volume(count) < minimum_volume+eps) {
         		best_x=balls[count].get_x();
             	best_y=balls[count].get_y();
             	best_z=balls[count].get_z();
@@ -264,7 +267,7 @@ void MovingMgr::moving_algorithm(){
                 cur_y=balls[count].get_y();
                 cur_z=balls[count].get_z();
         	}
-        	if (calculate_volume(count) < minimum_volume) {
+        	if (calculate_volume(count) < minimum_volume+eps) {
         		best_x=balls[count].get_x();
             	best_y=balls[count].get_y();
             	best_z=balls[count].get_z();

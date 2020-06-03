@@ -49,7 +49,6 @@ void parse_cubes(fstream& input_file, CubeMovingMgr* mgr) {
         end = line.length();
         temp = line.substr(start, end-start);
         double z = stod(temp);
-        cout << x << " " << y << " " << z <<endl;
         mgr->add_cube(x, y, z);
     }
 }
@@ -82,15 +81,14 @@ int main(int argc, char** argv)
     parse_cubes(input_file, moving_mgr);
 //    parse_balls(input_file, moving_mgr);
 
-    SAMgr* SAmgr = new SAMgr(moving_mgr, 10000, 1, 0.99);
-//    GAMgr* GAmgr = new GAMgr(moving_mgr, 1000, moving_mgr->get_number());
-//    GAmgr->start(output_file);
-//    SAMgr* SAmgr = new SAMgr(moving_mgr, 100, 1, 0.99);
-    SAmgr->start();
+//    SAMgr* SAmgr = new SAMgr(moving_mgr, 50000, 1, 0.995);
+//    SAmgr->start();
+    GAMgr* GAmgr = new GAMgr(moving_mgr, 300, moving_mgr->get_number());
+    GAmgr->start();
 
 
     delete(moving_mgr);
-//    delete(GAmgr);
-    delete(SAmgr);
+    delete(GAmgr);
+//    delete(SAmgr);
 	return 0;
 }
