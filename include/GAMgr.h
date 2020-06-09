@@ -3,6 +3,7 @@
 
 #include "CubeMovingMgr.h"
 #include <iostream>
+#include <vector>
 
 class GAMgr
 {
@@ -39,7 +40,7 @@ public:
     void update_cost();
     // node crossover
     void crossover(int);
-    void start();
+    void start(std::vector<double>&);
 private:
 	CubeMovingMgr* mgr;
     double temperature;

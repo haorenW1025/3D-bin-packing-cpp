@@ -2,6 +2,7 @@
 #include <fstream>
 #include <cmath>
 #include <string.h>
+#include <vector>
 #include "CubeMovingMgr.h"
 #include "SAMgr.h"
 #include "GAMgr.h"
@@ -57,13 +58,7 @@ int main(int argc, char** argv)
 {
     fstream input_file, output_file;
     if (argc == 3) {
-        input_file.open(argv[1], ios::in);
         output_file.open(argv[2], ios::out);
-        if (!input_file) {
-            cerr << "Cannot open the input file \"" << argv[1]
-                 << "\". The program will be terminated..." << endl;
-            exit(1);
-        }
         if (!output_file) {
             cerr << "Cannot open the output file \"" << argv[2]
                  << "\". The program will be terminated..." << endl;
@@ -77,18 +72,31 @@ int main(int argc, char** argv)
     /* set random seed */
     srand( time(NULL) );
 
-    CubeMovingMgr* moving_mgr = new CubeMovingMgr();
-    parse_cubes(input_file, moving_mgr);
-//    parse_balls(input_file, moving_mgr);
+    vector<vector<double>> result;
+    result.resize(10);
+    for (unsigned i = 0; i < 10; ++i) {
+        input_file.open(argv[1], ios::in);
+        CubeMovingMgr* moving_mgr = new CubeMovingMgr();
+        parse_cubes(input_file, moving_mgr);
+        input_file.close();
+        //    parse_balls(input_file, moving_mgr);
 
-//    SAMgr* SAmgr = new SAMgr(moving_mgr, 50000, 1, 0.995);
-//    SAmgr->start();
-    GAMgr* GAmgr = new GAMgr(moving_mgr, 300, moving_mgr->get_number());
-    GAmgr->start();
+        /* SAMgr* SAmgr = new SAMgr(moving_mgr, 100, 1, 0.95); */
+        /* SAmgr->start(result[i]); */
+        GAMgr* GAmgr = new GAMgr(moving_mgr, 300, moving_mgr->get_number());
+        GAmgr->start(result[0]);
 
 
-    delete(moving_mgr);
-    delete(GAmgr);
+        delete(moving_mgr);
+        delete(GAmgr);
+        /* delete(SAmgr); */
+    }
+    for (unsigned i = 0; i < 10; ++i) {
+        for (unsigned j = 0; j < result[i].size(); ++j) {
+            output_file << result[i][j] << " ";
+        }
+        output_file << "\n";
+    }
 //    delete(SAmgr);
 	return 0;
 }

@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <math.h>
 #include <iostream>
+#include <vector>
 #include "CubeMovingMgr.h"
 
 class SAMgr
@@ -13,7 +14,7 @@ public:
         mgr(m),currentTemperature(temp), minTemperature(min_temp), scalingParameter(s){};
     virtual ~SAMgr(){};
 
-    void start();
+    void start(std::vector<double> &);
     bool perform_uphill(double cost);
     void print_result();
 

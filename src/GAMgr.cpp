@@ -5,9 +5,9 @@
 #include <iostream>
 #include <random>
 #include <algorithm> 
-#include <vector>
 #include <chrono>
 #include <random>
+#include <vector>
 
 void GAMgr::random_initiailize(){
 	std::vector<int> foo;
@@ -514,9 +514,9 @@ void GAMgr::rtr(int** new_order, int* edge_or_node) {
     }
 }
 
-void GAMgr::start(){
+void GAMgr::start(std::vector<double>& result){
     random_initiailize();
-    for (int i = 0; i < 300; ++i) {
+    for (int i = 0; i < 500; ++i) {
     	cur_cost=999999;
 		for(int i=0;i<population;i++) {//best result
 			if(cost[i]<best_cost) {
@@ -536,7 +536,9 @@ void GAMgr::start(){
         mutation();
 
 		std::cout << i << ": " << best_cost << " " << cur_cost << " " << "edge: " << edge_p << " node: " << node_p << std::endl;
-        
+        if (i % 100 == 99) {
+            result.push_back(best_cost);
+        }
         
     }
 	mgr->reorder(best_order);

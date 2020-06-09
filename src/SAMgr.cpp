@@ -4,7 +4,7 @@
 #include <random>
 #include "SAMgr.h"
 
-void SAMgr::start() {
+void SAMgr::start(std::vector<double>& result) {
     /* get initial solution */
     mgr->reset();
     mgr->moving_algorithm();
@@ -50,6 +50,7 @@ void SAMgr::start() {
     mgr->moving_algorithm();
     cost = mgr->get_cost();
     std::cout << cost << std::endl;
+    result.push_back(cost);
     print_result();
 }
 
