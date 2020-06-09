@@ -84,7 +84,7 @@ int main(int argc, char** argv)
         /* SAMgr* SAmgr = new SAMgr(moving_mgr, 100, 1, 0.95); */
         /* SAmgr->start(result[i]); */
         GAMgr* GAmgr = new GAMgr(moving_mgr, 300, moving_mgr->get_number());
-        GAmgr->start(result[0]);
+        GAmgr->start(result[i]);
 
 
         delete(moving_mgr);
