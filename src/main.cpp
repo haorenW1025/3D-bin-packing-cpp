@@ -63,6 +63,7 @@ int main(int argc, char** argv)
     /* set random seed */
     srand( time(NULL) );
 
+    output_file.open(argv[2]);
     int temperature = atoi(argv[3]);
     double rate = atof(argv[4]);
 
