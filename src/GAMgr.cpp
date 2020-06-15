@@ -38,37 +38,52 @@ void GAMgr::update_cost() {
 
 void GAMgr::mutation() {
     std::vector<std::pair<int, int>> possible_pair;
-    for (int i = 0; i < balls_number-1; ++i) {
+    for (int i = 0; i < balls_number; ++i) {
         for (int j = i+1; j < balls_number; ++j) {
             possible_pair.push_back(std::make_pair(i, j));
         }
     }
+    //mut_orginal
+//    for (int i = 0; i < population; ++i) {
+//    	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+//	    shuffle (possible_pair.begin(), possible_pair.end(), std::default_random_engine(seed));
+//	    for (int j=0;j<balls_number;j++) {
+//	    	int first_index = possible_pair[j].first;
+//	        int second_index = possible_pair[j].second;
+//	        int temp = order[i][first_index];
+//	        order[i][first_index] = order[i][second_index];
+//	        order[i][second_index] = temp;
+//		    double mut_cost = moving(order[i]);
+//		    if (mut_cost < cost[i]) {
+//		        cost[i] = mut_cost;
+//		    } else {//swap back
+//		        temp = order[i][first_index];
+//		        order[i][first_index] = order[i][second_index];
+//		        order[i][second_index] = temp;
+//		    }
+//		}
+//    }
+    
+    //mut_random
     // assert(possible_pair.size() == (population*(population-1)/2));
     for (int i = 0; i < population; ++i) {
+    	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+	    shuffle (possible_pair.begin(), possible_pair.end(), std::default_random_engine(seed));
+	    int now_n = 0;
     	for (int j=0;j<balls_number;j++) {
-	        unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-	        shuffle (possible_pair.begin(), possible_pair.end(), std::default_random_engine(seed));
 	        int temp[balls_number];
 	        for (int k=0;k<balls_number;k++) {
 	        	temp[k] = order[i][k];
 			}
-			int n = rand() % 500 + 1;
-	//		int n = balls_number;
+			int n = rand() % 100 + 1;
 	        for (int k = 0; k < n; ++k) {
-	            int first_index = possible_pair[k].first;
-	            int second_index = possible_pair[k].second;
+	            int first_index = possible_pair[(now_n+k)%possible_pair.size()].first;
+	            int second_index = possible_pair[(now_n+k)%possible_pair.size()].second;
 	            int temp = order[i][first_index];
 	            order[i][first_index] = order[i][second_index];
 	            order[i][second_index] = temp;
-//		        double mut_cost = moving(order[i]);
-//		        if (mut_cost < cost[i]) {
-//		            cost[i] = mut_cost;
-//		        } else {//swap back
-//		            temp = order[i][first_index];
-//		            order[i][first_index] = order[i][second_index];
-//		            order[i][second_index] = temp;
-//		        }
-	    	}
+	        }
+	    	now_n += n;
 	    	double mut_cost = moving(order[i]);
 	    	if (mut_cost < cost[i]) {
 	    		cost[i] = mut_cost;
@@ -518,15 +533,15 @@ void GAMgr::start(std::vector<double>& result){
     random_initiailize();
     for (int i = 0; i < 500; ++i) {
     	cur_cost=999999;
-		for(int i=0;i<population;i++) {//best result
-			if(cost[i]<best_cost) {
-				best_cost=cost[i];
-				for(int j=0;j<balls_number;j++) {
-					best_order[j]=order[i][j];
+		for(int j=0;j<population;j++) {//best result
+			if(cost[j]<best_cost) {
+				best_cost=cost[j];
+				for(int k=0;k<balls_number;k++) {
+					best_order[k]=order[j][k];
 				}
 			}
-			if(cost[i]<cur_cost) {
-				cur_cost=cost[i];
+			if(cost[j]<cur_cost) {
+				cur_cost=cost[j];
 			}
 		}
         selection();
