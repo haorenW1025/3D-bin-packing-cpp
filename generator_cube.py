@@ -1,12 +1,12 @@
 import random
 
-f = open('input/input_cube2.txt', 'w')
+f = open('input/input_cube3.txt', 'w')
 
 f.write(str(30.0) + '\n')
-f.write(str(100) + '\n')
+f.write(str(200) + '\n')
 
 l = []
-for i in range(100):
+for i in range(200):
     n = [round(random.uniform(5, 15), 1), round(random.uniform(5, 15), 1), round(random.uniform(5, 15), 1)]
     l.append(n)
 

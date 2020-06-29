@@ -59,13 +59,45 @@ int main(int argc, char** argv)
 {
     // SA
     // ----------------------------------------------------------------
+    /* fstream input_file, output_file; */
+    /* set random seed */
+    /* srand( time(NULL) ); */
+
+    /* output_file.open(argv[2]); */
+    /* int temperature = atoi(argv[3]); */
+    /* double rate = atof(argv[4]); */
+
+    /* vector<vector<double>> result; */
+    /* result.resize(10); */
+    /* for (unsigned i = 0; i < 10; ++i) { */
+    /*     input_file.open(argv[1], ios::in); */
+    /*     CubeMovingMgr* moving_mgr = new CubeMovingMgr(); */
+    /*     parse_cubes(input_file, moving_mgr); */
+    /*     input_file.close(); */
+    /*     //    parse_balls(input_file, moving_mgr); */
+
+    /*     SAMgr* SAmgr = new SAMgr(moving_mgr, temperature, 1, rate); */
+    /*     SAmgr->start(result[i]); */
+    /*     /1* GAMgr* GAmgr = new GAMgr(moving_mgr, 300, moving_mgr->get_number()); *1/ */
+    /*     /1* GAmgr->start(result[i]); *1/ */
+
+
+    /*     delete(moving_mgr); */
+    /*     /1* delete(GAmgr); *1/ */
+    /*     delete(SAmgr); */
+    /* } */
+    /* for (unsigned i = 0; i < 10; ++i) { */
+    /*     for (unsigned j = 0; j < result[i].size(); ++j) { */
+    /*         output_file << result[i][j] << " "; */
+    /*     } */
+    /*     output_file << "\n"; */
+    /* } */
+	/* return 0; */
+    // GA
+    // ----------------------------------------------------------------
     fstream input_file, output_file;
     /* set random seed */
     srand( time(NULL) );
-
-    output_file.open(argv[2]);
-    int temperature = atoi(argv[3]);
-    double rate = atof(argv[4]);
 
     vector<vector<double>> result;
     result.resize(10);
@@ -76,52 +108,20 @@ int main(int argc, char** argv)
         input_file.close();
         //    parse_balls(input_file, moving_mgr);
 
-        SAMgr* SAmgr = new SAMgr(moving_mgr, temperature, 1, rate);
-        SAmgr->start(result[i]);
-        /* GAMgr* GAmgr = new GAMgr(moving_mgr, 300, moving_mgr->get_number()); */
-        /* GAmgr->start(result[i]); */
-
+        GAMgr* GAmgr = new GAMgr(moving_mgr, 300, moving_mgr->get_number());
+        GAmgr->start(result[i]);
 
         delete(moving_mgr);
-        /* delete(GAmgr); */
-        delete(SAmgr);
+        delete(GAmgr);
     }
+    output_file.open(argv[2], ios::out);
     for (unsigned i = 0; i < 10; ++i) {
         for (unsigned j = 0; j < result[i].size(); ++j) {
             output_file << result[i][j] << " ";
         }
         output_file << "\n";
     }
+    output_file.close();
 	return 0;
-    // ----------------------------------------------------------------
-
-    // GA
-    // ----------------------------------------------------------------
-//    fstream input_file, output_file;
-//    /* set random seed */
-//    srand( time(NULL) );
-//
-//    vector<vector<double>> result;
-//    result.resize(10);
-//    for (unsigned i = 0; i < 10; ++i) {
-//        input_file.open(argv[1], ios::in);
-//        CubeMovingMgr* moving_mgr = new CubeMovingMgr();
-//        parse_cubes(input_file, moving_mgr);
-//        input_file.close();
-//        //    parse_balls(input_file, moving_mgr);
-//
-//        GAMgr* GAmgr = new GAMgr(moving_mgr, 300, moving_mgr->get_number());
-//        GAmgr->start(result[i]);
-//
-//        delete(moving_mgr);
-//        delete(GAmgr);
-//    }
-//    for (unsigned i = 0; i < 10; ++i) {
-//        for (unsigned j = 0; j < result[i].size(); ++j) {
-//            output_file << result[i][j] << " ";
-//        }
-//        output_file << "\n";
-//    }
-//	return 0;
     // ----------------------------------------------------------------
 }
