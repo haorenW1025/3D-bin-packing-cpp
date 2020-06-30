@@ -93,7 +93,6 @@ int main(int argc, char** argv)
     /*     output_file << "\n"; */
     /* } */
 	/* return 0; */
-    // GA
     // ----------------------------------------------------------------
     fstream input_file, output_file;
     /* set random seed */
